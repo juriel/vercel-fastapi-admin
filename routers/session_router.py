@@ -1,4 +1,4 @@
-from fastapi import HTTPException
+from fastapi import Depends, HTTPException
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
 
@@ -7,7 +7,8 @@ from services.auth_token_service import AuthTokenService
 from services.privilege_service import PrivilegeService
 from services.profile_service import ProfileService
 from repositories.sqlalchemy_db_manager import SqlAlchemyDatabaseManager
-from dto.session_dto import LoginRequest, TokenResponse, RefreshRequest
+from dto.session_dto import LoginRequest, TokenResponse
+from routers.deps import get_current_token_code
 
 router = InferringRouter()
 
@@ -45,25 +46,23 @@ class SessionEndpoint:
                 privileges=privileges,
             )
 
+    # logout/refresh require an existing valid session, so the token comes
+    # from the Authorization header (like every other protected endpoint)
+    # instead of being passed in the request body.
     @router.post("/logout")
-    def logout(self, token_req: RefreshRequest):
+    def logout(self, token_code: str = Depends(get_current_token_code)):
         with SqlAlchemyDatabaseManager.session("primary") as session:
             auth_service = AuthTokenService(session)
-            token = auth_service.find_by_id(token_req.token)
+            token = auth_service.find_by_id(token_code)
             if token:
                 auth_service.delete(token)
-                return {"message": "Logged out successfully"}
-            raise HTTPException(status_code=404, detail="Token not found")
+            return {"message": "Logged out successfully"}
 
     @router.post("/session_refresh", response_model=TokenResponse)
-    def refresh(self, refresh_req: RefreshRequest):
+    def refresh(self, token_code: str = Depends(get_current_token_code)):
         with SqlAlchemyDatabaseManager.session("primary") as session:
             auth_service = AuthTokenService(session)
-            old_token = auth_service.validate_token(refresh_req.token)
-
-            if not old_token:
-                raise HTTPException(status_code=401, detail="Invalid or expired token")
-
+            old_token = auth_service.find_by_id(token_code)
             user_login = old_token.user_login
             auth_service.delete(old_token)
             token, privileges = _issue_token(session, auth_service, user_login)

@@ -17,7 +17,3 @@ class TokenResponse(BaseModel):
     privileges: List[PrivilegeResponse] = []
 
     model_config = ConfigDict(from_attributes=True)
-
-
-class RefreshRequest(BaseModel):
-    token: str
