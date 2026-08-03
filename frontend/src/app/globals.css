@@ -1,0 +1,31 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #e6e6e6;
+    background-color: #0a0a0a;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #1f2328;
+    background-color: #ffffff;
+  }
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
