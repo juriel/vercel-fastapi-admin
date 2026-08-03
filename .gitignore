@@ -1,9 +1,10 @@
 # Claude Code local settings
 .claude/settings.local.json
 
-# Node / Next.js
+# Node / Vite
 node_modules
-.next
+frontend/dist
+backend/static
 .vercel
 *.log
 *.local
