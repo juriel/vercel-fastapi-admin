@@ -12,11 +12,6 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, World!"}
-
-
 @app.get("/api/hello")
 def hello(name: str = "World"):
     return {"message": f"Hello, {name}!"}
@@ -25,4 +20,4 @@ def hello(name: str = "World"):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("server:app", host="0.0.0.0", port=8081, reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=8081)
