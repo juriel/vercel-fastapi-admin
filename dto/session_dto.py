@@ -1,7 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from typing import List
-from uuid import UUID
 
 from dto.privilege_dto import PrivilegeResponse
 
@@ -12,7 +11,7 @@ class LoginRequest(BaseModel):
 
 
 class TokenResponse(BaseModel):
-    token: UUID
+    token: str
     expires_at: datetime
     identity: str
     privileges: List[PrivilegeResponse] = []
@@ -21,4 +20,4 @@ class TokenResponse(BaseModel):
 
 
 class RefreshRequest(BaseModel):
-    token: UUID
+    token: str
