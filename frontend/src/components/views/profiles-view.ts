@@ -36,7 +36,11 @@ export class ProfilesView extends LitElement {
   render() {
     return html`
       <div class="flex flex-col min-h-screen">
-        <app-header .identity=${this.identity}></app-header>
+        <app-header
+          .identity=${this.identity}
+          pageTitle="Perfiles"
+          pageSubtitle="Define roles y privilegios para los usuarios de la organización."
+        ></app-header>
         <div class="flex flex-1">
           <app-sidebar .privileges=${this.privileges}></app-sidebar>
           <profile-management></profile-management>

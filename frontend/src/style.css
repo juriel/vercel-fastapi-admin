@@ -69,7 +69,8 @@
   app-sidebar,
   app-content,
   app-footer,
-  user-management {
+  user-management,
+  profile-management {
     display: block;
   }
 
@@ -85,12 +86,34 @@
     height: 100%;
   }
 
+  lucide-icon {
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  lucide-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke-width: 2;
+  }
+
+  app-sidebar,
+  app-header,
+  app-content,
+  user-management,
+  profile-management {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
   /* These sit next to app-sidebar in a flex row and need to grow into
      the remaining space themselves (the flex utility class Tailwind
      applies is on the <main> *inside* the custom element, not on the
      custom element itself, which is the actual flex item). */
   app-content,
-  user-management {
+  user-management,
+  profile-management {
     flex: 1 1 0%;
     min-width: 0;
   }

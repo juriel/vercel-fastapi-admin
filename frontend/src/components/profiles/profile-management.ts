@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit'
 import { apiClient, ApiError } from '../../lib/api-client'
-import '../common/icon'
+import '../common/lucide-icon'
 
 interface Privilege {
   code: string
@@ -13,6 +13,18 @@ interface ProfileRecord {
   name: string
   editable: number
   privileges: Privilege[]
+}
+
+const PROFILE_DESCRIPTIONS: Record<string, string> = {
+  ADMIN: 'Acceso completo al sistema',
+  ADMINISTRADOR: 'Acceso completo al sistema',
+  SUPERVISOR: 'Gestiona equipos y usuarios',
+  OPERADOR: 'Acceso operativo',
+  VENTAS: 'Acceso al módulo comercial',
+}
+
+function describeProfile(code: string): string {
+  return PROFILE_DESCRIPTIONS[code.toUpperCase()] ?? 'Perfil personalizado de la organización'
 }
 
 type Modal = 'none' | 'create' | 'edit' | 'delete'
@@ -294,76 +306,92 @@ export class ProfileManagement extends LitElement {
 
   render() {
     return html`
-      <main class="flex-1 p-6">
-        <div class="flex items-center justify-between mb-4 gap-4">
-          <h1 class="text-xl font-semibold m-0 text-[var(--primary-color2)]">Perfiles</h1>
-          <div class="flex gap-2">
-            <button class="btn-outline flex items-center gap-1.5" @click=${this.loadProfiles}>
-              <app-icon name="refresh"></app-icon>
+      <main class="flex-1 bg-[#F8FAFC] p-8">
+        <div class="flex flex-col gap-6">
+          <div class="flex items-center justify-end gap-3">
+            <button
+              class="flex h-12 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
+              @click=${this.loadProfiles}
+            >
+              <lucide-icon name="refresh-cw"></lucide-icon>
               Actualizar
             </button>
-            <button class="btn flex items-center gap-1.5" @click=${this.openCreate}>
-              <app-icon name="plus"></app-icon>
+            <button
+              class="flex h-12 items-center gap-2 rounded-xl bg-[#0B3B78] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90"
+              @click=${this.openCreate}
+            >
+              <lucide-icon name="plus"></lucide-icon>
               Crear perfil
             </button>
           </div>
-        </div>
 
-        ${this.error ? html`<p class="error-text mb-2">${this.error}</p>` : ''}
-        ${this.loading
-          ? html`<p class="text-sm opacity-60">Cargando...</p>`
-          : html`
-              <div class="overflow-x-auto">
-                <table class="w-full text-sm border-collapse">
-                  <thead>
-                    <tr class="text-left border-b" style="border-color: var(--border-color)">
-                      <th class="py-2 pr-4">Código</th>
-                      <th class="py-2 pr-4">Nombre</th>
-                      <th class="py-2 pr-4">Privilegios</th>
-                      <th class="py-2 pr-4">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${this.profiles.map(
-                      (p) => html`
-                        <tr class="border-b" style="border-color: var(--border-soft)">
-                          <td class="py-2 pr-4">${p.code}</td>
-                          <td class="py-2 pr-4">${p.name}</td>
-                          <td class="py-2 pr-4">${p.privileges.length}</td>
-                          <td class="py-2 pr-4">
-                            ${p.editable
-                              ? html`
-                                  <div class="flex gap-2">
-                                    <button
-                                      class="btn-outline flex items-center gap-1.5"
-                                      @click=${() => this.openEdit(p)}
-                                    >
-                                      <app-icon name="edit"></app-icon>
-                                      Editar
-                                    </button>
-                                    <button
-                                      class="btn-outline flex items-center gap-1.5"
-                                      @click=${() => this.openDelete(p)}
-                                    >
-                                      <app-icon name="trash"></app-icon>
-                                      Eliminar
-                                    </button>
-                                  </div>
-                                `
-                              : html`<span class="text-xs opacity-60">No editable</span>`}
-                          </td>
+          ${this.error ? html`<p class="error-text">${this.error}</p>` : ''}
+
+          ${this.loading
+            ? html`<p class="text-sm text-[#64748B]">Cargando...</p>`
+            : html`
+                <div class="overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white">
+                  <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-left text-sm">
+                      <thead>
+                        <tr>
+                          <th class="px-6 py-4 font-semibold text-[#334155]">Código</th>
+                          <th class="px-6 py-4 font-semibold text-[#334155]">Nombre</th>
+                          <th class="px-6 py-4 font-semibold text-[#334155]">Privilegios</th>
+                          <th class="px-6 py-4 text-right font-semibold text-[#334155]">Acciones</th>
                         </tr>
-                      `
-                    )}
-                    ${this.profiles.length === 0
-                      ? html`<tr>
-                          <td class="py-4 opacity-60" colspan="4">No hay perfiles para mostrar.</td>
-                        </tr>`
-                      : ''}
-                  </tbody>
-                </table>
-              </div>
-            `}
+                      </thead>
+                      <tbody>
+                        ${this.profiles.map(
+                          (p) => html`
+                            <tr
+                              class="border-t border-[#F1F5F9] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
+                            >
+                              <td class="h-[60px] px-6">
+                                <span
+                                  class="inline-flex items-center rounded-md bg-[#F1F5F9] px-2 py-1 font-mono text-xs text-[#334155]"
+                                  >${p.code}</span
+                                >
+                              </td>
+                              <td class="h-[60px] px-6">
+                                <div class="flex flex-col">
+                                  <span class="font-semibold text-[#0F172A]">${p.name}</span>
+                                  <span class="text-xs text-[#64748B]">${describeProfile(p.code)}</span>
+                                </div>
+                              </td>
+                              <td class="h-[60px] px-6">
+                                <span
+                                  class="inline-flex items-center rounded-full bg-[#EFF6FF] px-2.5 py-1 text-xs font-medium text-[#0B3B78]"
+                                >
+                                  ${p.privileges.length} privilegio${p.privileges.length === 1 ? '' : 's'}
+                                </span>
+                              </td>
+                              <td class="h-[60px] px-6 text-right">
+                                <button
+                                  aria-label="Más acciones"
+                                  title=${p.editable ? '' : 'No editable'}
+                                  ?disabled=${!p.editable}
+                                  class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-[#64748B] transition-colors duration-150 ease-out hover:bg-[#EFF6FF] hover:text-[#0B3B78] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[#64748B]"
+                                >
+                                  <lucide-icon name="more-horizontal"></lucide-icon>
+                                </button>
+                              </td>
+                            </tr>
+                          `
+                        )}
+                        ${this.profiles.length === 0
+                          ? html`<tr>
+                              <td class="px-6 py-12 text-center text-sm text-[#64748B]" colspan="4">
+                                No hay perfiles para mostrar.
+                              </td>
+                            </tr>`
+                          : ''}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              `}
+        </div>
         ${this.modal === 'create' || this.modal === 'edit' ? this.renderFormModal() : ''}
         ${this.modal === 'delete' ? this.renderDeleteModal() : ''}
       </main>

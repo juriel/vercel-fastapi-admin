@@ -1,12 +1,19 @@
 import { LitElement, html } from 'lit'
 import { apiClient, ApiError } from '../../lib/api-client'
-import '../common/icon'
+import '../common/lucide-icon'
 
 interface UserRecord {
   login: string
   name?: string | null
   email?: string | null
   active?: number | null
+}
+
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean)
+  if (parts.length === 0) return '?'
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+  return (parts[0][0] + parts[1][0]).toUpperCase()
 }
 
 type Modal = 'none' | 'create' | 'edit' | 'delete'
@@ -301,108 +308,140 @@ export class UserManagement extends LitElement {
 
   render() {
     return html`
-      <main class="flex-1 p-6">
-        <div class="flex items-center justify-between mb-4 gap-4">
-          <h1 class="text-xl font-semibold m-0 text-[var(--primary-color2)]">Usuarios</h1>
-          <div class="flex gap-2">
-            <button class="btn-outline flex items-center gap-1.5" @click=${this.loadUsers}>
-              <app-icon name="refresh"></app-icon>
-              Actualizar
-            </button>
-            <button class="btn flex items-center gap-1.5" @click=${this.openCreate}>
-              <app-icon name="user-plus"></app-icon>
-              Crear usuario
-            </button>
+      <main class="flex-1 bg-[#F8FAFC] p-8">
+        <div class="flex flex-col gap-6">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="relative w-full max-w-[420px]">
+              <lucide-icon
+                name="search"
+                class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+              ></lucide-icon>
+              <input
+                type="text"
+                placeholder="Buscar por usuario, nombre o email..."
+                class="h-12 w-full rounded-xl border border-[#E2E8F0] bg-white pl-11 pr-4 text-sm font-medium text-[#0F172A] outline-none transition-colors duration-150 ease-out placeholder:font-normal placeholder:text-[#94A3B8] focus:border-[#0B3B78] focus:ring-4 focus:ring-[#0B3B78]/10"
+                .value=${this.filter}
+                @input=${this.onFilterInput}
+              />
+            </div>
+            <div class="flex items-center gap-3">
+              <button
+                class="flex h-12 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
+                @click=${this.loadUsers}
+              >
+                <lucide-icon name="refresh-cw"></lucide-icon>
+                Actualizar
+              </button>
+              <button
+                class="flex h-12 items-center gap-2 rounded-xl bg-[#0B3B78] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90"
+                @click=${this.openCreate}
+              >
+                <lucide-icon name="user-plus"></lucide-icon>
+                Crear usuario
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div class="relative w-full max-w-sm mb-4">
-          <app-icon
-            name="search"
-            class="absolute left-3 top-1/2 -translate-y-1/2 opacity-50 pointer-events-none"
-          ></app-icon>
-          <input
-            type="text"
-            placeholder="Filtrar por usuario, nombre o email..."
-            class="field w-full pl-9"
-            .value=${this.filter}
-            @input=${this.onFilterInput}
-          />
-        </div>
+          ${this.error ? html`<p class="error-text">${this.error}</p>` : ''}
 
-        ${this.error ? html`<p class="error-text mb-2">${this.error}</p>` : ''}
-        ${this.loading
-          ? html`<p class="text-sm opacity-60">Cargando...</p>`
-          : html`
-              <div class="overflow-x-auto">
-                <table class="w-full text-sm border-collapse">
-                  <thead>
-                    <tr class="text-left border-b" style="border-color: var(--border-color)">
-                      <th class="py-2 pr-4">Usuario</th>
-                      <th class="py-2 pr-4">Nombre</th>
-                      <th class="py-2 pr-4">Email</th>
-                      <th class="py-2 pr-4">Activo</th>
-                      <th class="py-2 pr-4">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${this.users.map(
-                      (u) => html`
-                        <tr class="border-b" style="border-color: var(--border-soft)">
-                          <td class="py-2 pr-4">${u.login}</td>
-                          <td class="py-2 pr-4">${u.name || '—'}</td>
-                          <td class="py-2 pr-4">${u.email || '—'}</td>
-                          <td class="py-2 pr-4">${u.active ? 'Sí' : 'No'}</td>
-                          <td class="py-2 pr-4">
-                            <div class="flex gap-2">
-                              <button
-                                class="btn-outline flex items-center gap-1.5"
-                                @click=${() => this.openEdit(u)}
-                              >
-                                <app-icon name="edit"></app-icon>
-                                Editar
-                              </button>
-                              <button
-                                class="btn-outline flex items-center gap-1.5"
-                                @click=${() => this.openDelete(u)}
-                              >
-                                <app-icon name="trash"></app-icon>
-                                Eliminar
-                              </button>
-                            </div>
-                          </td>
+          ${this.loading
+            ? html`<p class="text-sm text-[#64748B]">Cargando...</p>`
+            : html`
+                <div class="overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white">
+                  <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-left text-sm">
+                      <thead>
+                        <tr>
+                          <th class="px-6 py-4 font-semibold text-[#334155]">Usuario</th>
+                          <th class="px-6 py-4 font-semibold text-[#334155]">Nombre</th>
+                          <th class="px-6 py-4 font-semibold text-[#334155]">Email</th>
+                          <th class="px-6 py-4 font-semibold text-[#334155]">Activo</th>
+                          <th class="px-6 py-4 text-right font-semibold text-[#334155]">Acciones</th>
                         </tr>
-                      `
-                    )}
-                    ${this.users.length === 0
-                      ? html`<tr>
-                          <td class="py-4 opacity-60" colspan="5">No hay usuarios para mostrar.</td>
-                        </tr>`
-                      : ''}
-                  </tbody>
-                </table>
-              </div>
-              <div class="flex items-center justify-between mt-4 text-sm">
-                <span class="opacity-60">${this.total} usuario${this.total === 1 ? '' : 's'} en total</span>
-                <div class="flex items-center gap-2">
-                  <button
-                    class="btn-outline"
-                    ?disabled=${this.page <= 1}
-                    @click=${() => this.goToPage(this.page - 1)}
-                  >
-                    Anterior
-                  </button>
-                  <span>Página ${this.page} de ${this.pageCount}</span>
-                  <button
-                    class="btn-outline"
-                    ?disabled=${this.page >= this.pageCount}
-                    @click=${() => this.goToPage(this.page + 1)}
-                  >
-                    Siguiente
-                  </button>
+                      </thead>
+                      <tbody>
+                        ${this.users.map(
+                          (u) => html`
+                            <tr
+                              class="border-t border-[#F1F5F9] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
+                            >
+                              <td class="h-[60px] px-6">
+                                <div class="flex items-center gap-3">
+                                  <div
+                                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EFF6FF] text-xs font-semibold text-[#0B3B78]"
+                                  >
+                                    ${initials(u.name || u.login)}
+                                  </div>
+                                  <span class="font-medium text-[#0F172A]">${u.login}</span>
+                                </div>
+                              </td>
+                              <td class="h-[60px] px-6 text-[#0F172A]">${u.name || '—'}</td>
+                              <td class="h-[60px] px-6 text-[#64748B]">${u.email || '—'}</td>
+                              <td class="h-[60px] px-6">
+                                ${u.active
+                                  ? html`<span
+                                      class="inline-flex items-center rounded-full bg-[#ECFDF5] px-2.5 py-1 text-xs font-medium text-[#059669]"
+                                      >Activo</span
+                                    >`
+                                  : html`<span
+                                      class="inline-flex items-center rounded-full bg-[#F1F5F9] px-2.5 py-1 text-xs font-medium text-[#64748B]"
+                                      >Inactivo</span
+                                    >`}
+                              </td>
+                              <td class="h-[60px] px-6 text-right">
+                                <button
+                                  aria-label="Más acciones"
+                                  class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-[#64748B] transition-colors duration-150 ease-out hover:bg-[#EFF6FF] hover:text-[#0B3B78]"
+                                >
+                                  <lucide-icon name="more-horizontal"></lucide-icon>
+                                </button>
+                              </td>
+                            </tr>
+                          `
+                        )}
+                        ${this.users.length === 0
+                          ? html`<tr>
+                              <td class="px-6 py-12 text-center text-sm text-[#64748B]" colspan="5">
+                                No hay usuarios para mostrar.
+                              </td>
+                            </tr>`
+                          : ''}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-            `}
+
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-[#64748B]"
+                    >${this.total} usuario${this.total === 1 ? '' : 's'} en total</span
+                  >
+                  <div class="flex items-center gap-3">
+                    <button
+                      class="flex h-10 items-center rounded-full border border-[#E2E8F0] bg-white px-4 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-white"
+                      ?disabled=${this.page <= 1}
+                      @click=${() => this.goToPage(this.page - 1)}
+                    >
+                      Anterior
+                    </button>
+                    <span class="flex items-center gap-1.5 text-sm text-[#64748B]">
+                      Página
+                      <span
+                        class="flex h-7 min-w-7 items-center justify-center rounded-full bg-[#0B3B78] px-2 text-xs font-semibold text-white"
+                        >${this.page}</span
+                      >
+                      de ${this.pageCount}
+                    </span>
+                    <button
+                      class="flex h-10 items-center rounded-full border border-[#E2E8F0] bg-white px-4 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-white"
+                      ?disabled=${this.page >= this.pageCount}
+                      @click=${() => this.goToPage(this.page + 1)}
+                    >
+                      Siguiente
+                    </button>
+                  </div>
+                </div>
+              `}
+        </div>
         ${this.modal === 'create' || this.modal === 'edit' ? this.renderFormModal() : ''}
         ${this.modal === 'delete' ? this.renderDeleteModal() : ''}
       </main>

@@ -36,7 +36,11 @@ export class UsersView extends LitElement {
   render() {
     return html`
       <div class="flex flex-col min-h-screen">
-        <app-header .identity=${this.identity}></app-header>
+        <app-header
+          .identity=${this.identity}
+          pageTitle="Usuarios"
+          pageSubtitle="Administra los usuarios y permisos de la organización."
+        ></app-header>
         <div class="flex flex-1">
           <app-sidebar .privileges=${this.privileges}></app-sidebar>
           <user-management></user-management>

@@ -36,10 +36,14 @@ export class HomeView extends LitElement {
   render() {
     return html`
       <div class="flex flex-col min-h-screen">
-        <app-header .identity=${this.identity}></app-header>
+        <app-header
+          .identity=${this.identity}
+          pageTitle="Inicio"
+          pageSubtitle="Resumen general de tu organización en AIXA."
+        ></app-header>
         <div class="flex flex-1">
           <app-sidebar .privileges=${this.privileges}></app-sidebar>
-          <app-content .identity=${this.identity} .privileges=${this.privileges}></app-content>
+          <app-content .identity=${this.identity}></app-content>
         </div>
         <app-footer></app-footer>
       </div>
