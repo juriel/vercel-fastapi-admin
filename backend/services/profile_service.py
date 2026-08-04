@@ -1,6 +1,8 @@
 from typing import List
 
+from models.entities.privilege import Privilege
 from models.entities.profile import Profile
+from models.entities.profile_privilege import ProfilePrivilege
 from models.entities.user_profile import UserProfile
 from services.sqlalchemy_service import SQLAlchemyService
 from repositories.profile_repository import ProfileRepository
@@ -21,3 +23,30 @@ class ProfileService(SQLAlchemyService[Profile]):
             .filter(UserProfile.login == login)
             .all()
         )
+
+    def find_all(self) -> List[Profile]:
+        return self.session.query(Profile).order_by(Profile.code).all()
+
+    def privileges_for(self, profile_code: str) -> List[Privilege]:
+        return (
+            self.session.query(Privilege)
+            .join(ProfilePrivilege, ProfilePrivilege.privilege_code == Privilege.code)
+            .filter(ProfilePrivilege.profile_code == profile_code)
+            .order_by(Privilege.category, Privilege.code)
+            .all()
+        )
+
+    def set_privileges(self, profile_code: str, privilege_codes: List[str]) -> None:
+        self.session.query(ProfilePrivilege).filter(
+            ProfilePrivilege.profile_code == profile_code
+        ).delete()
+        for code in dict.fromkeys(privilege_codes):
+            self.session.add(ProfilePrivilege(profile_code=profile_code, privilege_code=code))
+        self.session.flush()
+
+    def delete_profile(self, profile: Profile) -> None:
+        self.session.query(ProfilePrivilege).filter(
+            ProfilePrivilege.profile_code == profile.code
+        ).delete()
+        self.session.flush()
+        self.delete(profile)

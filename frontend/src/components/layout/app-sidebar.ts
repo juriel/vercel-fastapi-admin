@@ -42,6 +42,12 @@ export class AppSidebar extends LitElement {
                 Usuarios
               </a>`
             : ''}
+          ${Session.getInstance().can('profiles.read')
+            ? html`<a href="/profiles" class="font-medium text-sm flex items-center gap-2">
+                <app-icon name="id-badge"></app-icon>
+                Perfiles
+              </a>`
+            : ''}
           ${this.privilegesByCategory.map(
             ([category, items]) => html`
               <div>

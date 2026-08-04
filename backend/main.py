@@ -10,6 +10,9 @@ from models.sqlalchemy.common.base import SQLAlchemyBase
 from repositories.sqlalchemy_db_manager import SqlAlchemyDatabaseManager
 from routers.deps import require_privilege
 from routers.hello_router import router as hello_router
+from routers.privilege_router import router as privilege_router
+from routers.profile_router import router as profile_router
+from routers.profile_write_router import router as profile_write_router
 from routers.registration_router import router as registration_router
 from routers.user_router import router as user_router
 from routers.user_write_router import router as user_write_router
@@ -37,6 +40,17 @@ app.include_router(
 )
 app.include_router(
     user_write_router, prefix="/api", dependencies=[Depends(require_privilege("users.write"))]
+)
+app.include_router(
+    privilege_router, prefix="/api", dependencies=[Depends(require_privilege("profiles.read"))]
+)
+app.include_router(
+    profile_router, prefix="/api", dependencies=[Depends(require_privilege("profiles.read"))]
+)
+app.include_router(
+    profile_write_router,
+    prefix="/api",
+    dependencies=[Depends(require_privilege("profiles.write"))],
 )
 app.include_router(session_router, prefix="/api")
 
