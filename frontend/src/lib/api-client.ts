@@ -19,7 +19,10 @@ async function request(path: string, options: RequestInit, auth: boolean) {
 
   const res = await fetch(`${API_BASE}${path}`, { ...options, headers })
 
-  if (auth && (res.status === 401 || res.status === 403)) {
+  // 401 means the session itself is invalid/expired; 403 means the caller
+  // is authenticated but lacks a specific privilege, which isn't a reason
+  // to log them out.
+  if (auth && res.status === 401) {
     Session.getInstance().clear()
     if (typeof window !== 'undefined') window.location.href = '/login'
   }

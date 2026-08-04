@@ -10,6 +10,16 @@ interface UserRecord {
 
 type Modal = 'none' | 'create' | 'edit' | 'delete'
 
+function describeError(err: unknown, fallback: string): string {
+  if (err instanceof ApiError && err.status === 403) {
+    return 'No tienes permiso para realizar esta acción.'
+  }
+  if (err instanceof ApiError && err.status === 400) {
+    return 'Ese usuario ya existe.'
+  }
+  return fallback
+}
+
 export class UserManagement extends LitElement {
   static properties = {
     users: { type: Array },
@@ -72,8 +82,8 @@ export class UserManagement extends LitElement {
     this.error = ''
     try {
       this.users = (await apiClient.get('/users')) as UserRecord[]
-    } catch {
-      this.error = 'No se pudo cargar la lista de usuarios.'
+    } catch (err) {
+      this.error = describeError(err, 'No se pudo cargar la lista de usuarios.')
     } finally {
       this.loading = false
     }
@@ -153,10 +163,7 @@ export class UserManagement extends LitElement {
       this.closeModal()
       await this.loadUsers()
     } catch (err) {
-      this.formError =
-        err instanceof ApiError && err.status === 400
-          ? 'Ese usuario ya existe.'
-          : 'No se pudo guardar el usuario.'
+      this.formError = describeError(err, 'No se pudo guardar el usuario.')
     } finally {
       this.submitting = false
     }
@@ -169,8 +176,8 @@ export class UserManagement extends LitElement {
       await apiClient.delete(`/users/${encodeURIComponent(this.target.login)}`)
       this.closeModal()
       await this.loadUsers()
-    } catch {
-      this.error = 'No se pudo eliminar el usuario.'
+    } catch (err) {
+      this.error = describeError(err, 'No se pudo eliminar el usuario.')
       this.closeModal()
     } finally {
       this.submitting = false

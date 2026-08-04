@@ -8,10 +8,11 @@ from fastapi.staticfiles import StaticFiles
 from database import DATABASE_URL
 from models.sqlalchemy.common.base import SQLAlchemyBase
 from repositories.sqlalchemy_db_manager import SqlAlchemyDatabaseManager
-from routers.deps import get_current_user
+from routers.deps import require_privilege
 from routers.hello_router import router as hello_router
 from routers.registration_router import router as registration_router
 from routers.user_router import router as user_router
+from routers.user_write_router import router as user_write_router
 from routers.session_router import router as session_router
 
 SqlAlchemyDatabaseManager.register("primary", DATABASE_URL)
@@ -31,7 +32,12 @@ app.add_middleware(
 
 app.include_router(hello_router, prefix="/api")
 app.include_router(registration_router, prefix="/api")
-app.include_router(user_router, prefix="/api", dependencies=[Depends(get_current_user)])
+app.include_router(
+    user_router, prefix="/api", dependencies=[Depends(require_privilege("users.read"))]
+)
+app.include_router(
+    user_write_router, prefix="/api", dependencies=[Depends(require_privilege("users.write"))]
+)
 app.include_router(session_router, prefix="/api")
 
 # The frontend is a static Vite+Lit build. Locally it lives at ../frontend/dist
