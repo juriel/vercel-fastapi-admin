@@ -2,14 +2,55 @@
 
 @layer base {
   :root {
-    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-    color-scheme: light dark;
+    /* Brand Colors (sourced from aixalab.comtor.net's nue-common-style.css) */
+    --primary-color2: #083461;
+    --secondary-color2: #0b4886;
+    --primary-color: #c20313;
+    --secondary-color: #61080f;
+
+    /* Neutrals & Backgrounds */
+    --bg-page: #ffffff;
+    --bg-main: #f9f9f9;
+    --bg-hover-light: #fafbfc;
+    --bg-neutral: #f5f5f5;
+
+    /* Grays & Borders */
+    --border-color: #e0e0e0;
+    --border-input: #ccc;
+    --border-card: #ddd;
+    --border-soft: #eee;
+    --shadow-light: rgba(0, 0, 0, 0.08);
+    --shadow-main: rgba(0, 0, 0, 0.1);
+    --shadow-deep: rgba(0, 0, 0, 0.13);
+
+    /* Text Colors */
+    --text-main: #000000;
+    --text-dark: #333;
+    --text-muted: #666;
+    --text-light: #888;
+    --text-kpi: #6c757d;
+    --text-kpi-val: #343a40;
+
+    /* Accents */
+    --clr-link: #007bff;
+    --clr-accent-blue: #2a7ae2;
+    --clr-bot-msg: #2673b2;
+    --clr-user-msg: #e0e3e8;
+
+    /* Legacy mapping */
+    --background-color: #b2b2b8;
+    --default-color: var(--text-main);
+
+    font-family: 'Montserrat', system-ui, Avenir, Helvetica, Arial, sans-serif;
+    color-scheme: light;
   }
 
   html,
   body {
     height: 100%;
     margin: 0;
+    background-color: var(--bg-page);
+    color: var(--text-main);
   }
 
   /* Lit custom elements render into the light DOM in this project, so
@@ -32,18 +73,26 @@
   }
 
   .field {
-    @apply px-3 py-2 rounded-md border border-neutral-300 dark:border-neutral-600 bg-transparent text-inherit text-base;
+    @apply px-3 py-2 rounded-md border bg-transparent text-inherit text-base;
+    border-color: var(--border-input);
   }
 
   .btn {
-    @apply px-4 py-2 rounded-md bg-blue-600 text-white text-base whitespace-nowrap cursor-pointer disabled:opacity-60 disabled:cursor-default;
+    @apply px-4 py-2 rounded-md text-white text-base whitespace-nowrap cursor-pointer disabled:opacity-60 disabled:cursor-default;
+    background-color: var(--primary-color);
+  }
+  .btn:hover:not(:disabled) {
+    background-color: var(--secondary-color);
   }
 
   .btn-outline {
-    @apply px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-600 bg-transparent text-inherit text-sm cursor-pointer;
+    @apply px-3 py-1.5 rounded-md border bg-transparent text-sm cursor-pointer;
+    border-color: var(--border-input);
+    color: var(--text-main);
   }
 
   .error-text {
-    @apply m-0 text-red-500;
+    @apply m-0;
+    color: var(--primary-color);
   }
 }

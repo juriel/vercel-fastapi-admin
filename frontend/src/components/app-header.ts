@@ -31,7 +31,7 @@ export class AppHeader extends LitElement {
   render() {
     return html`
       <header
-        class="h-14 shrink-0 flex items-center justify-between px-4 border-b border-neutral-300 dark:border-neutral-600"
+        class="h-14 shrink-0 flex items-center justify-between px-4 border-b border-[var(--border-color)]"
       >
         <span class="font-semibold text-lg">Hello World Admin</span>
         <div class="flex items-center gap-3">

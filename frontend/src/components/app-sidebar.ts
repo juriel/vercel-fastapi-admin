@@ -29,7 +29,7 @@ export class AppSidebar extends LitElement {
 
   render() {
     return html`
-      <aside class="w-56 shrink-0 border-r border-neutral-300 dark:border-neutral-600 p-4">
+      <aside class="w-56 shrink-0 border-r border-[var(--border-color)] p-4">
         <nav class="flex flex-col gap-4">
           <a href="/" class="font-medium text-sm">Inicio</a>
           ${this.privilegesByCategory.map(

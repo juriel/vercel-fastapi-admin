@@ -8,7 +8,7 @@ export class AppFooter extends LitElement {
   render() {
     return html`
       <footer
-        class="h-10 shrink-0 flex items-center justify-center text-xs border-t border-neutral-300 dark:border-neutral-600"
+        class="h-10 shrink-0 flex items-center justify-center text-xs border-t border-[var(--border-color)]"
       >
         © 2026 Hello World
       </footer>
