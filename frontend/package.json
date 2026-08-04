@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && rm -rf dist && vite build --mode main && vite build --mode login && vite build --mode register && vite build --mode forgot-password && vite build --mode users",
+    "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vaadin/router": "^2.0.0",
     "lit": "^3.2.1"
   },
   "devDependencies": {

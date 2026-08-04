@@ -40,7 +40,7 @@ export class ForgotPasswordForm extends LitElement {
             Si existe una cuenta con ese usuario, un administrador se pondrá en contacto para
             ayudarte a recuperar el acceso.
           </p>
-          <a href="/login.html" class="text-sm text-[var(--clr-link)]">Volver a iniciar sesión</a>
+          <a href="/login" class="text-sm text-[var(--clr-link)]">Volver a iniciar sesión</a>
         </div>
       `
     }
@@ -63,7 +63,7 @@ export class ForgotPasswordForm extends LitElement {
           required
         />
         <button type="submit" class="btn">Enviar solicitud</button>
-        <a href="/login.html" class="text-sm text-[var(--clr-link)]">Volver a iniciar sesión</a>
+        <a href="/login" class="text-sm text-[var(--clr-link)]">Volver a iniciar sesión</a>
       </form>
     `
   }

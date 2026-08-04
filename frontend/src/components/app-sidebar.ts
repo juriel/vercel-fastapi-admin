@@ -33,7 +33,7 @@ export class AppSidebar extends LitElement {
         <nav class="flex flex-col gap-4">
           <a href="/" class="font-medium text-sm">Inicio</a>
           ${Session.getInstance().can('users.read')
-            ? html`<a href="/users.html" class="font-medium text-sm">Usuarios</a>`
+            ? html`<a href="/users" class="font-medium text-sm">Usuarios</a>`
             : ''}
           ${this.privilegesByCategory.map(
             ([category, items]) => html`

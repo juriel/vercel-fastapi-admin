@@ -79,7 +79,7 @@ export class RegisterForm extends LitElement {
           <h1 class="text-xl font-semibold m-0 mb-2 text-[var(--primary-color2)]">
             Cuenta creada
           </h1>
-          <p>Ya puedes <a href="/login.html" class="text-[var(--clr-link)]">iniciar sesión</a>.</p>
+          <p>Ya puedes <a href="/login" class="text-[var(--clr-link)]">iniciar sesión</a>.</p>
         </div>
       `
     }
@@ -115,7 +115,7 @@ export class RegisterForm extends LitElement {
           ${this.loading ? 'Creando...' : 'Registrarme'}
         </button>
         ${this.error ? html`<p class="error-text">${this.error}</p>` : ''}
-        <a href="/login.html" class="text-sm text-[var(--clr-link)]">Ya tengo cuenta</a>
+        <a href="/login" class="text-sm text-[var(--clr-link)]">Ya tengo cuenta</a>
       </form>
     `
   }

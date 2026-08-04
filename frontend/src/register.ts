@@ -1,1 +1,0 @@
-import './components/register-form'

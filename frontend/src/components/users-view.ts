@@ -27,6 +27,7 @@ export class UsersView extends LitElement {
 
   connectedCallback() {
     super.connectedCallback()
+    document.title = 'Usuarios - Hello World'
     if (!Session.getInstance().isAuthenticated()) {
       window.location.href = '/login'
     }

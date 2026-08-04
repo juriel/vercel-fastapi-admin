@@ -95,12 +95,12 @@ export class LoginForm extends LitElement {
         </button>
         ${this.error ? html`<p class="error-text">${this.error}</p>` : ''}
         <div class="flex flex-col gap-1 text-sm mt-1">
-          <a href="/forgot-password.html" class="text-[var(--clr-link)]"
+          <a href="/forgot-password" class="text-[var(--clr-link)]"
             >¿Olvidaste tu contraseña?</a
           >
           <span
             >¿No tienes cuenta?
-            <a href="/register.html" class="text-[var(--clr-link)]">Regístrate</a></span
+            <a href="/register" class="text-[var(--clr-link)]">Regístrate</a></span
           >
         </div>
       </form>

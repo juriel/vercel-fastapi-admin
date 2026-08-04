@@ -27,6 +27,7 @@ export class HomeView extends LitElement {
 
   connectedCallback() {
     super.connectedCallback()
+    document.title = 'Hello World'
     if (!Session.getInstance().isAuthenticated()) {
       window.location.href = '/login'
     }

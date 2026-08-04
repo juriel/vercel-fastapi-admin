@@ -60,12 +60,9 @@ if static_dir.exists():
         if file_path.is_file():
             return FileResponse(file_path)
 
-        # index.html for "/", <name>.html for known pages, otherwise fall back to index.html
-        pages = {"login", "register", "forgot-password", "users"}
-        if full_path == "" or full_path in pages:
-            page = f"{full_path}.html" if full_path else "index.html"
-            return FileResponse(static_dir / page)
-
+        # Single-page app: routing (including /login, /users, etc.) is
+        # handled client-side by @vaadin/router, so every non-API,
+        # non-static path gets the same index.html.
         return FileResponse(static_dir / "index.html")
 
 
