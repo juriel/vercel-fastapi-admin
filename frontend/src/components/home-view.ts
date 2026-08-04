@@ -25,6 +25,13 @@ export class HomeView extends LitElement {
     return this
   }
 
+  connectedCallback() {
+    super.connectedCallback()
+    if (!Session.getInstance().isAuthenticated()) {
+      window.location.href = '/login'
+    }
+  }
+
   render() {
     return html`
       <div class="flex flex-col min-h-screen">
