@@ -1,5 +1,6 @@
 import hashlib
 import secrets
+from typing import List, Optional, Tuple
 
 from sqlalchemy import inspect
 
@@ -38,3 +39,8 @@ class UserService(SQLAlchemyService[User]):
 
     def verify_password(self, user: User, password: str) -> bool:
         return self._hash_password(user.salt, password) == user.password
+
+    def find_page(
+        self, page: int, page_size: int, search: Optional[str] = None
+    ) -> Tuple[List[User], int]:
+        return self._repo().find_page(page, page_size, search)

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import List, Optional
 
 
 class UserBase(BaseModel):
@@ -23,3 +23,10 @@ class UserUpdate(BaseModel):
 class UserResponse(UserBase):
     class Config:
         from_attributes = True
+
+
+class UserPage(BaseModel):
+    items: List[UserResponse]
+    total: int
+    page: int
+    page_size: int

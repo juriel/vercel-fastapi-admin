@@ -21,10 +21,21 @@ function describeError(err: unknown, fallback: string): string {
   return fallback
 }
 
+const PAGE_SIZE = 10
+
+interface UserPageResponse {
+  items: UserRecord[]
+  total: number
+  page: number
+  page_size: number
+}
+
 export class UserManagement extends LitElement {
   static properties = {
     users: { type: Array },
     filter: { type: String },
+    page: { type: Number },
+    total: { type: Number },
     loading: { type: Boolean },
     error: { type: String },
     modal: { type: String },
@@ -40,6 +51,8 @@ export class UserManagement extends LitElement {
 
   declare users: UserRecord[]
   declare filter: string
+  declare page: number
+  declare total: number
   declare loading: boolean
   declare error: string
   declare modal: Modal
@@ -52,10 +65,14 @@ export class UserManagement extends LitElement {
   declare formError: string
   declare submitting: boolean
 
+  private filterDebounce?: ReturnType<typeof setTimeout>
+
   constructor() {
     super()
     this.users = []
     this.filter = ''
+    this.page = 1
+    this.total = 0
     this.loading = false
     this.error = ''
     this.modal = 'none'
@@ -78,11 +95,23 @@ export class UserManagement extends LitElement {
     this.loadUsers()
   }
 
+  private get pageCount(): number {
+    return Math.max(1, Math.ceil(this.total / PAGE_SIZE))
+  }
+
   private async loadUsers() {
     this.loading = true
     this.error = ''
     try {
-      this.users = (await apiClient.get('/users')) as UserRecord[]
+      const params = new URLSearchParams({
+        page: String(this.page),
+        page_size: String(PAGE_SIZE),
+      })
+      if (this.filter.trim()) params.set('search', this.filter.trim())
+
+      const data = (await apiClient.get(`/users?${params}`)) as UserPageResponse
+      this.users = data.items
+      this.total = data.total
     } catch (err) {
       this.error = describeError(err, 'No se pudo cargar la lista de usuarios.')
     } finally {
@@ -90,16 +119,17 @@ export class UserManagement extends LitElement {
     }
   }
 
-  private get filteredUsers(): UserRecord[] {
-    const q = this.filter.trim().toLowerCase()
-    if (!q) return this.users
-    return this.users.filter((u) =>
-      [u.login, u.name, u.email].some((v) => (v ?? '').toLowerCase().includes(q))
-    )
-  }
-
   private onFilterInput(e: Event) {
     this.filter = (e.target as HTMLInputElement).value
+    this.page = 1
+    clearTimeout(this.filterDebounce)
+    this.filterDebounce = setTimeout(() => this.loadUsers(), 300)
+  }
+
+  private goToPage(page: number) {
+    if (page < 1 || page > this.pageCount) return
+    this.page = page
+    this.loadUsers()
   }
 
   private openCreate() {
@@ -176,6 +206,7 @@ export class UserManagement extends LitElement {
     try {
       await apiClient.delete(`/users/${encodeURIComponent(this.target.login)}`)
       this.closeModal()
+      if (this.users.length === 1 && this.page > 1) this.page -= 1
       await this.loadUsers()
     } catch (err) {
       this.error = describeError(err, 'No se pudo eliminar el usuario.')
@@ -315,7 +346,7 @@ export class UserManagement extends LitElement {
                     </tr>
                   </thead>
                   <tbody>
-                    ${this.filteredUsers.map(
+                    ${this.users.map(
                       (u) => html`
                         <tr class="border-b" style="border-color: var(--border-soft)">
                           <td class="py-2 pr-4">${u.login}</td>
@@ -343,13 +374,33 @@ export class UserManagement extends LitElement {
                         </tr>
                       `
                     )}
-                    ${this.filteredUsers.length === 0
+                    ${this.users.length === 0
                       ? html`<tr>
                           <td class="py-4 opacity-60" colspan="5">No hay usuarios para mostrar.</td>
                         </tr>`
                       : ''}
                   </tbody>
                 </table>
+              </div>
+              <div class="flex items-center justify-between mt-4 text-sm">
+                <span class="opacity-60">${this.total} usuario${this.total === 1 ? '' : 's'} en total</span>
+                <div class="flex items-center gap-2">
+                  <button
+                    class="btn-outline"
+                    ?disabled=${this.page <= 1}
+                    @click=${() => this.goToPage(this.page - 1)}
+                  >
+                    Anterior
+                  </button>
+                  <span>Página ${this.page} de ${this.pageCount}</span>
+                  <button
+                    class="btn-outline"
+                    ?disabled=${this.page >= this.pageCount}
+                    @click=${() => this.goToPage(this.page + 1)}
+                  >
+                    Siguiente
+                  </button>
+                </div>
               </div>
             `}
         ${this.modal === 'create' || this.modal === 'edit' ? this.renderFormModal() : ''}
