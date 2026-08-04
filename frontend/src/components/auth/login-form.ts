@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit'
 import { apiClient, ApiError } from '../../lib/api-client'
 import { Session, SessionData } from '../../session/session'
+import '../common/icon'
 
 export class LoginForm extends LitElement {
   static properties = {
@@ -74,22 +75,34 @@ export class LoginForm extends LitElement {
       <form class="card" @submit=${this.submit}>
         <img src="/aixa-logo.svg" alt="Aixa" class="w-24 mx-auto mb-2" />
         <h1 class="text-xl font-semibold m-0 mb-2 text-[var(--primary-color2)]">Iniciar sesión</h1>
-        <input
-          type="text"
-          placeholder="Usuario"
-          autocomplete="username"
-          class="field"
-          .value=${this.login}
-          @input=${this.onLoginInput}
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          autocomplete="current-password"
-          class="field"
-          .value=${this.password}
-          @input=${this.onPasswordInput}
-        />
+        <div class="relative">
+          <app-icon
+            name="user"
+            class="absolute left-3 top-1/2 -translate-y-1/2 opacity-50 pointer-events-none"
+          ></app-icon>
+          <input
+            type="text"
+            placeholder="Usuario"
+            autocomplete="username"
+            class="field w-full pl-9"
+            .value=${this.login}
+            @input=${this.onLoginInput}
+          />
+        </div>
+        <div class="relative">
+          <app-icon
+            name="lock"
+            class="absolute left-3 top-1/2 -translate-y-1/2 opacity-50 pointer-events-none"
+          ></app-icon>
+          <input
+            type="password"
+            placeholder="Contraseña"
+            autocomplete="current-password"
+            class="field w-full pl-9"
+            .value=${this.password}
+            @input=${this.onPasswordInput}
+          />
+        </div>
         <button type="submit" ?disabled=${this.loading} class="btn">
           ${this.loading ? 'Ingresando...' : 'Ingresar'}
         </button>

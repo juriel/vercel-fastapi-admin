@@ -11,6 +11,8 @@ import iconDashboard from '@tabler/icons/outline/layout-dashboard.svg?raw'
 import iconRefresh from '@tabler/icons/outline/refresh.svg?raw'
 import iconShield from '@tabler/icons/outline/shield.svg?raw'
 import iconSearch from '@tabler/icons/outline/search.svg?raw'
+import iconUser from '@tabler/icons/outline/user.svg?raw'
+import iconLock from '@tabler/icons/outline/lock.svg?raw'
 
 const ICONS: Record<string, string> = {
   home: iconHome,
@@ -23,6 +25,8 @@ const ICONS: Record<string, string> = {
   refresh: iconRefresh,
   shield: iconShield,
   search: iconSearch,
+  user: iconUser,
+  lock: iconLock,
 }
 
 export type IconName = keyof typeof ICONS
