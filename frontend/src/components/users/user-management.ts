@@ -1,5 +1,6 @@
 import { LitElement, html } from 'lit'
 import { apiClient, ApiError } from '../../lib/api-client'
+import '../common/icon'
 
 interface UserRecord {
   login: string
@@ -273,18 +274,30 @@ export class UserManagement extends LitElement {
         <div class="flex items-center justify-between mb-4 gap-4">
           <h1 class="text-xl font-semibold m-0 text-[var(--primary-color2)]">Usuarios</h1>
           <div class="flex gap-2">
-            <button class="btn-outline" @click=${this.loadUsers}>Actualizar</button>
-            <button class="btn" @click=${this.openCreate}>Crear usuario</button>
+            <button class="btn-outline flex items-center gap-1.5" @click=${this.loadUsers}>
+              <app-icon name="refresh"></app-icon>
+              Actualizar
+            </button>
+            <button class="btn flex items-center gap-1.5" @click=${this.openCreate}>
+              <app-icon name="user-plus"></app-icon>
+              Crear usuario
+            </button>
           </div>
         </div>
 
-        <input
-          type="text"
-          placeholder="Filtrar por usuario, nombre o email..."
-          class="field w-full max-w-sm mb-4"
-          .value=${this.filter}
-          @input=${this.onFilterInput}
-        />
+        <div class="relative w-full max-w-sm mb-4">
+          <app-icon
+            name="search"
+            class="absolute left-3 top-1/2 -translate-y-1/2 opacity-50 pointer-events-none"
+          ></app-icon>
+          <input
+            type="text"
+            placeholder="Filtrar por usuario, nombre o email..."
+            class="field w-full pl-9"
+            .value=${this.filter}
+            @input=${this.onFilterInput}
+          />
+        </div>
 
         ${this.error ? html`<p class="error-text mb-2">${this.error}</p>` : ''}
         ${this.loading
@@ -311,10 +324,18 @@ export class UserManagement extends LitElement {
                           <td class="py-2 pr-4">${u.active ? 'Sí' : 'No'}</td>
                           <td class="py-2 pr-4">
                             <div class="flex gap-2">
-                              <button class="btn-outline" @click=${() => this.openEdit(u)}>
+                              <button
+                                class="btn-outline flex items-center gap-1.5"
+                                @click=${() => this.openEdit(u)}
+                              >
+                                <app-icon name="edit"></app-icon>
                                 Editar
                               </button>
-                              <button class="btn-outline" @click=${() => this.openDelete(u)}>
+                              <button
+                                class="btn-outline flex items-center gap-1.5"
+                                @click=${() => this.openDelete(u)}
+                              >
+                                <app-icon name="trash"></app-icon>
                                 Eliminar
                               </button>
                             </div>

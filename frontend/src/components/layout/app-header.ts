@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit'
 import { Session } from '../../session/session'
 import { apiClient } from '../../lib/api-client'
+import '../common/icon'
 
 export class AppHeader extends LitElement {
   static properties = {
@@ -36,7 +37,10 @@ export class AppHeader extends LitElement {
         <span class="font-semibold text-lg">Hello World Admin</span>
         <div class="flex items-center gap-3">
           <span class="text-sm">${this.identity}</span>
-          <button @click=${this.logout} class="btn-outline">Cerrar sesión</button>
+          <button @click=${this.logout} class="btn-outline flex items-center gap-1.5">
+            <app-icon name="logout"></app-icon>
+            Cerrar sesión
+          </button>
         </div>
       </header>
     `

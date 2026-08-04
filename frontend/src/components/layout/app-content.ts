@@ -1,5 +1,6 @@
 import { LitElement, html } from 'lit'
 import { Privilege } from '../../session/session'
+import '../common/icon'
 
 export class AppContent extends LitElement {
   static properties = {
@@ -27,7 +28,10 @@ export class AppContent extends LitElement {
           <h1 class="text-xl font-semibold m-0 text-[var(--primary-color2)]">Bienvenido, ${this.identity}</h1>
 
           <div>
-            <h2 class="text-base font-semibold m-0 mb-2">Privilegios</h2>
+            <h2 class="text-base font-semibold m-0 mb-2 flex items-center gap-2">
+              <app-icon name="shield"></app-icon>
+              Privilegios
+            </h2>
             ${this.privileges.length
               ? html`
                   <ul class="m-0 pl-5 list-disc">

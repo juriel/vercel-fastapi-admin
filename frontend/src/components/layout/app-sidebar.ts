@@ -1,5 +1,6 @@
 import { LitElement, html } from 'lit'
 import { Session, Privilege } from '../../session/session'
+import '../common/icon'
 
 export class AppSidebar extends LitElement {
   static properties = {
@@ -31,16 +32,27 @@ export class AppSidebar extends LitElement {
     return html`
       <aside class="w-56 shrink-0 border-r border-[var(--border-color)] p-4">
         <nav class="flex flex-col gap-4">
-          <a href="/" class="font-medium text-sm">Inicio</a>
+          <a href="/" class="font-medium text-sm flex items-center gap-2">
+            <app-icon name="home"></app-icon>
+            Inicio
+          </a>
           ${Session.getInstance().can('users.read')
-            ? html`<a href="/users" class="font-medium text-sm">Usuarios</a>`
+            ? html`<a href="/users" class="font-medium text-sm flex items-center gap-2">
+                <app-icon name="users"></app-icon>
+                Usuarios
+              </a>`
             : ''}
           ${this.privilegesByCategory.map(
             ([category, items]) => html`
               <div>
                 <div class="text-xs uppercase opacity-60 mb-1">${category}</div>
                 <ul class="flex flex-col gap-1">
-                  ${items.map((p) => html`<li class="text-sm">${p.name}</li>`)}
+                  ${items.map(
+                    (p) => html`<li class="text-sm flex items-center gap-2">
+                      <app-icon name="shield"></app-icon>
+                      ${p.name}
+                    </li>`
+                  )}
                 </ul>
               </div>
             `

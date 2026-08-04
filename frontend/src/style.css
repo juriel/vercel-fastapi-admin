@@ -73,6 +73,18 @@
     display: block;
   }
 
+  app-icon {
+    display: inline-flex;
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+  }
+
+  app-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
   /* These sit next to app-sidebar in a flex row and need to grow into
      the remaining space themselves (the flex utility class Tailwind
      applies is on the <main> *inside* the custom element, not on the

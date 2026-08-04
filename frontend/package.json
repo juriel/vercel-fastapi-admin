@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tabler/icons": "^3.46.0",
     "@vaadin/router": "^2.0.0",
     "lit": "^3.2.1"
   },
