@@ -54,9 +54,10 @@ if static_dir.exists():
         if file_path.is_file():
             return FileResponse(file_path)
 
-        # index.html for "/", login.html for "/login", otherwise fall back to index.html
-        if full_path in ("", "login"):
-            page = "login.html" if full_path == "login" else "index.html"
+        # index.html for "/", <name>.html for known pages, otherwise fall back to index.html
+        pages = {"login", "register", "forgot-password"}
+        if full_path == "" or full_path in pages:
+            page = f"{full_path}.html" if full_path else "index.html"
             return FileResponse(static_dir / page)
 
         return FileResponse(static_dir / "index.html")

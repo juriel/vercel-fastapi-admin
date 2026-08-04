@@ -2,8 +2,15 @@ import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 
-// Built as two fully separate single-entry builds (see package.json's
-// build script) so Rollup never sees both pages at once and never
+const entries: Record<string, string> = {
+  main: 'index.html',
+  login: 'login.html',
+  register: 'register.html',
+  'forgot-password': 'forgot-password.html',
+}
+
+// Built as fully separate single-entry builds (see package.json's build
+// script) so Rollup never sees more than one page at once and never
 // extracts shared modules (session, api-client, ...) into their own
 // chunk — each page compiles to exactly one self-contained JS file.
 export default defineConfig(({ mode }) => ({
@@ -11,7 +18,7 @@ export default defineConfig(({ mode }) => ({
   build: {
     emptyOutDir: false,
     rollupOptions: {
-      input: resolve(__dirname, mode === 'login' ? 'login.html' : 'index.html'),
+      input: resolve(__dirname, entries[mode] ?? entries.main),
     },
   },
   server: {

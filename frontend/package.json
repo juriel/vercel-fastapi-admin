@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && rm -rf dist && vite build --mode main && vite build --mode login",
+    "build": "tsc && rm -rf dist && vite build --mode main && vite build --mode login && vite build --mode register && vite build --mode forgot-password",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -58,6 +58,8 @@
      elements as inline by default. */
   hello-form,
   login-form,
+  register-form,
+  forgot-password-form,
   home-view,
   app-header,
   app-sidebar,
