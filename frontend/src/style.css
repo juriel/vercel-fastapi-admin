@@ -56,7 +56,6 @@
   /* Lit custom elements render into the light DOM in this project, so
      these need an explicit display since browsers treat unknown
      elements as inline by default. */
-  hello-form,
   login-form,
   register-form,
   forgot-password-form,

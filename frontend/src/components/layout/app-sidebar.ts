@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit'
-import { Session, Privilege } from '../session/session'
+import { Session, Privilege } from '../../session/session'
 
 export class AppSidebar extends LitElement {
   static properties = {

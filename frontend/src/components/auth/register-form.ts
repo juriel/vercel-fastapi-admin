@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit'
-import { apiClient, ApiError } from '../lib/api-client'
+import { apiClient, ApiError } from '../../lib/api-client'
 
 export class RegisterForm extends LitElement {
   static properties = {

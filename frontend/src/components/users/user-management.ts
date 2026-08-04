@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit'
-import { apiClient, ApiError } from '../lib/api-client'
+import { apiClient, ApiError } from '../../lib/api-client'
 
 interface UserRecord {
   login: string

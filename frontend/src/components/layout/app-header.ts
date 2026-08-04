@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit'
-import { Session } from '../session/session'
-import { apiClient } from '../lib/api-client'
+import { Session } from '../../session/session'
+import { apiClient } from '../../lib/api-client'
 
 export class AppHeader extends LitElement {
   static properties = {

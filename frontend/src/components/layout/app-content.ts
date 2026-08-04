@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit'
-import { Privilege } from '../session/session'
+import { Privilege } from '../../session/session'
 
 export class AppContent extends LitElement {
   static properties = {

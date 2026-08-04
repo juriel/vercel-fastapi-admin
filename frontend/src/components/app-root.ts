@@ -1,10 +1,10 @@
 import { LitElement, html } from 'lit'
 import { Router } from '@vaadin/router'
-import './home-view'
-import './users-view'
-import './login-page'
-import './register-page'
-import './forgot-password-page'
+import './views/home-view'
+import './views/users-view'
+import './auth/login-page'
+import './auth/register-page'
+import './auth/forgot-password-page'
 
 export class AppRoot extends LitElement {
   createRenderRoot() {

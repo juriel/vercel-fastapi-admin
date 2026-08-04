@@ -1,9 +1,9 @@
 import { LitElement, html } from 'lit'
-import { Session, Privilege } from '../session/session'
-import './app-header'
-import './app-sidebar'
-import './user-management'
-import './app-footer'
+import { Session, Privilege } from '../../session/session'
+import '../layout/app-header'
+import '../layout/app-sidebar'
+import '../users/user-management'
+import '../layout/app-footer'
 
 export class UsersView extends LitElement {
   static properties = {

@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit'
-import { apiClient, ApiError } from '../lib/api-client'
-import { Session, SessionData } from '../session/session'
+import { apiClient, ApiError } from '../../lib/api-client'
+import { Session, SessionData } from '../../session/session'
 
 export class LoginForm extends LitElement {
   static properties = {
