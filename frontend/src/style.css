@@ -61,11 +61,23 @@
   register-form,
   forgot-password-form,
   home-view,
+  users-view,
   app-header,
   app-sidebar,
   app-content,
-  app-footer {
+  app-footer,
+  user-management {
     display: block;
+  }
+
+  /* These sit next to app-sidebar in a flex row and need to grow into
+     the remaining space themselves (the flex utility class Tailwind
+     applies is on the <main> *inside* the custom element, not on the
+     custom element itself, which is the actual flex item). */
+  app-content,
+  user-management {
+    flex: 1 1 0%;
+    min-width: 0;
   }
 }
 

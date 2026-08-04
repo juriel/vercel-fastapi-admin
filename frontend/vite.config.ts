@@ -7,6 +7,7 @@ const entries: Record<string, string> = {
   login: 'login.html',
   register: 'register.html',
   'forgot-password': 'forgot-password.html',
+  users: 'users.html',
 }
 
 // Built as fully separate single-entry builds (see package.json's build

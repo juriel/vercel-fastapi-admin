@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit'
-import { Privilege } from '../session/session'
+import { Session, Privilege } from '../session/session'
 
 export class AppSidebar extends LitElement {
   static properties = {
@@ -32,6 +32,9 @@ export class AppSidebar extends LitElement {
       <aside class="w-56 shrink-0 border-r border-[var(--border-color)] p-4">
         <nav class="flex flex-col gap-4">
           <a href="/" class="font-medium text-sm">Inicio</a>
+          ${Session.getInstance().can('users.read')
+            ? html`<a href="/users.html" class="font-medium text-sm">Usuarios</a>`
+            : ''}
           ${this.privilegesByCategory.map(
             ([category, items]) => html`
               <div>

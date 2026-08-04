@@ -42,4 +42,7 @@ export const apiClient = {
   get: (path: string, auth = true) => request(path, { method: 'GET' }, auth),
   post: (path: string, body?: unknown, auth = true) =>
     request(path, { method: 'POST', body: body ? JSON.stringify(body) : undefined }, auth),
+  put: (path: string, body?: unknown, auth = true) =>
+    request(path, { method: 'PUT', body: body ? JSON.stringify(body) : undefined }, auth),
+  delete: (path: string, auth = true) => request(path, { method: 'DELETE' }, auth),
 }
