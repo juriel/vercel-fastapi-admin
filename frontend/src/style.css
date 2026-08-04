@@ -17,7 +17,11 @@
      elements as inline by default. */
   hello-form,
   login-form,
-  home-view {
+  home-view,
+  app-header,
+  app-sidebar,
+  app-content,
+  app-footer {
     display: block;
   }
 }
