@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit'
+import { LitElement, html } from 'lit'
 import { apiClient, ApiError } from '../lib/api-client'
 import { Session, SessionData } from '../session/session'
 
@@ -15,56 +15,16 @@ export class LoginForm extends LitElement {
   declare error: string
   declare loading: boolean
 
-  static styles = css`
-    :host {
-      display: block;
-      font-family: inherit;
-    }
-    .card {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      width: 20rem;
-    }
-    h1 {
-      font-size: 1.25rem;
-      margin: 0 0 0.5rem 0;
-    }
-    input {
-      padding: 0.5rem 0.75rem;
-      border-radius: 6px;
-      border: 1px solid #3a3a3a;
-      background: transparent;
-      color: inherit;
-      font-size: 1rem;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      border: none;
-      background: #0070f3;
-      color: white;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-    button:disabled {
-      opacity: 0.6;
-      cursor: default;
-    }
-    p {
-      margin: 0;
-    }
-    .error {
-      color: #ef4444;
-    }
-  `
-
   constructor() {
     super()
     this.login = ''
     this.password = ''
     this.error = ''
     this.loading = false
+  }
+
+  createRenderRoot() {
+    return this
   }
 
   connectedCallback() {
@@ -112,11 +72,12 @@ export class LoginForm extends LitElement {
   render() {
     return html`
       <form class="card" @submit=${this.submit}>
-        <h1>Iniciar sesión</h1>
+        <h1 class="text-xl font-semibold m-0 mb-2">Iniciar sesión</h1>
         <input
           type="text"
           placeholder="Usuario"
           autocomplete="username"
+          class="field"
           .value=${this.login}
           @input=${this.onLoginInput}
         />
@@ -124,13 +85,14 @@ export class LoginForm extends LitElement {
           type="password"
           placeholder="Contraseña"
           autocomplete="current-password"
+          class="field"
           .value=${this.password}
           @input=${this.onPasswordInput}
         />
-        <button type="submit" ?disabled=${this.loading}>
+        <button type="submit" ?disabled=${this.loading} class="btn">
           ${this.loading ? 'Ingresando...' : 'Ingresar'}
         </button>
-        ${this.error ? html`<p class="error">${this.error}</p>` : ''}
+        ${this.error ? html`<p class="error-text">${this.error}</p>` : ''}
       </form>
     `
   }

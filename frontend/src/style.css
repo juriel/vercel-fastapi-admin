@@ -1,31 +1,45 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  color-scheme: light dark;
-}
+@import 'tailwindcss';
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    color: #e6e6e6;
-    background-color: #0a0a0a;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    color-scheme: light dark;
+  }
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+  }
+
+  /* Lit custom elements render into the light DOM in this project, so
+     these need an explicit display since browsers treat unknown
+     elements as inline by default. */
+  hello-form,
+  login-form,
+  home-view {
+    display: block;
   }
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #1f2328;
-    background-color: #ffffff;
+@layer components {
+  .card {
+    @apply flex flex-col gap-3 w-80;
   }
-}
 
-html,
-body {
-  height: 100%;
-  margin: 0;
-}
+  .field {
+    @apply px-3 py-2 rounded-md border border-neutral-300 dark:border-neutral-600 bg-transparent text-inherit text-base;
+  }
 
-main {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+  .btn {
+    @apply px-4 py-2 rounded-md bg-blue-600 text-white text-base whitespace-nowrap cursor-pointer disabled:opacity-60 disabled:cursor-default;
+  }
+
+  .btn-outline {
+    @apply px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-600 bg-transparent text-inherit text-sm cursor-pointer;
+  }
+
+  .error-text {
+    @apply m-0 text-red-500;
+  }
 }

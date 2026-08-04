@@ -12,7 +12,9 @@
     "lit": "^3.2.1"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.0",
     "@types/node": "^20",
+    "tailwindcss": "^4.1.0",
     "typescript": "^5",
     "vite": "^6.0.0"
   }

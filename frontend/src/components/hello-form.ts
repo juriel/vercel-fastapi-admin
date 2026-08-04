@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit'
+import { LitElement, html } from 'lit'
 import { API_BASE } from '../constants'
 
 export class HelloForm extends LitElement {
@@ -14,57 +14,16 @@ export class HelloForm extends LitElement {
   declare loading: boolean
   declare error: string
 
-  static styles = css`
-    :host {
-      display: block;
-      font-family: inherit;
-    }
-    .card {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      width: 20rem;
-    }
-    .row {
-      display: flex;
-      gap: 0.5rem;
-    }
-    input {
-      flex: 1;
-      padding: 0.5rem 0.75rem;
-      border-radius: 6px;
-      border: 1px solid #3a3a3a;
-      background: transparent;
-      color: inherit;
-      font-size: 1rem;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      border: none;
-      background: #0070f3;
-      color: white;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-    button:disabled {
-      opacity: 0.6;
-      cursor: default;
-    }
-    p {
-      margin: 0;
-    }
-    .error {
-      color: #ef4444;
-    }
-  `
-
   constructor() {
     super()
     this.name = ''
     this.message = ''
     this.loading = false
     this.error = ''
+  }
+
+  createRenderRoot() {
+    return this
   }
 
   private onInput(e: Event) {
@@ -92,21 +51,22 @@ export class HelloForm extends LitElement {
   render() {
     return html`
       <div class="card">
-        <div class="row">
+        <div class="flex gap-2">
           <input
             type="text"
             placeholder="Enter your name"
+            class="field flex-1"
             .value=${this.name}
             @input=${this.onInput}
             @keydown=${(e: KeyboardEvent) =>
               e.key === 'Enter' && this.callHello()}
           />
-          <button ?disabled=${this.loading} @click=${this.callHello}>
+          <button ?disabled=${this.loading} @click=${this.callHello} class="btn">
             ${this.loading ? 'Loading...' : 'Say Hello'}
           </button>
         </div>
-        ${this.message ? html`<p>${this.message}</p>` : ''}
-        ${this.error ? html`<p class="error">${this.error}</p>` : ''}
+        ${this.message ? html`<p class="m-0">${this.message}</p>` : ''}
+        ${this.error ? html`<p class="error-text">${this.error}</p>` : ''}
       </div>
     `
   }
