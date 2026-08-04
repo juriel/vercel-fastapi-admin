@@ -79,10 +79,10 @@
 
   .btn {
     @apply px-4 py-2 rounded-md text-white text-base whitespace-nowrap cursor-pointer disabled:opacity-60 disabled:cursor-default;
-    background-color: var(--primary-color);
+    background-color: var(--primary-color2);
   }
   .btn:hover:not(:disabled) {
-    background-color: var(--secondary-color);
+    background-color: var(--secondary-color2);
   }
 
   .btn-outline {

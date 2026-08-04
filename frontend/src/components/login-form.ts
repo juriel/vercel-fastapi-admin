@@ -72,7 +72,7 @@ export class LoginForm extends LitElement {
   render() {
     return html`
       <form class="card" @submit=${this.submit}>
-        <h1 class="text-xl font-semibold m-0 mb-2">Iniciar sesión</h1>
+        <h1 class="text-xl font-semibold m-0 mb-2 text-[var(--primary-color2)]">Iniciar sesión</h1>
         <input
           type="text"
           placeholder="Usuario"

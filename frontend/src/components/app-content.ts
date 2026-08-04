@@ -24,7 +24,7 @@ export class AppContent extends LitElement {
     return html`
       <main class="flex-1 p-6">
         <div class="flex flex-col gap-4 max-w-2xl">
-          <h1 class="text-xl font-semibold m-0">Bienvenido, ${this.identity}</h1>
+          <h1 class="text-xl font-semibold m-0 text-[var(--primary-color2)]">Bienvenido, ${this.identity}</h1>
 
           <div>
             <h2 class="text-base font-semibold m-0 mb-2">Privilegios</h2>
