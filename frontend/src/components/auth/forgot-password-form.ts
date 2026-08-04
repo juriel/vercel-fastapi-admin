@@ -1,4 +1,5 @@
 import { LitElement, html } from 'lit'
+import '../common/icon'
 
 export class ForgotPasswordForm extends LitElement {
   static properties = {
@@ -54,14 +55,20 @@ export class ForgotPasswordForm extends LitElement {
         <p class="text-sm">
           Ingresa tu usuario y un administrador te ayudará a recuperar el acceso.
         </p>
-        <input
-          type="text"
-          placeholder="Usuario"
-          class="field"
-          .value=${this.login}
-          @input=${this.onLoginInput}
-          required
-        />
+        <div class="relative">
+          <app-icon
+            name="user"
+            class="absolute left-3 top-1/2 -translate-y-1/2 opacity-50 pointer-events-none"
+          ></app-icon>
+          <input
+            type="text"
+            placeholder="Usuario"
+            class="field w-full pl-9"
+            .value=${this.login}
+            @input=${this.onLoginInput}
+            required
+          />
+        </div>
         <button type="submit" class="btn">Enviar solicitud</button>
         <a href="/login" class="text-sm text-[var(--clr-link)]">Volver a iniciar sesión</a>
       </form>
