@@ -39,19 +39,6 @@ const RECENT_ACTIVITY: { title: string; time: string }[] = [
   { title: 'Nueva integración agregada', time: 'Hace 3 horas' },
 ]
 
-interface QuickAction {
-  icon: LucideIconName
-  label: string
-}
-
-const QUICK_ACTIONS: QuickAction[] = [
-  { icon: 'bot', label: 'Crear Agente IA' },
-  { icon: 'building-2', label: 'Nueva Empresa' },
-  { icon: 'user-plus', label: 'Nuevo Usuario' },
-  { icon: 'zap', label: 'Nueva Automatización' },
-  { icon: 'plug-2', label: 'Nueva Integración' },
-]
-
 export class AppContent extends LitElement {
   static properties = {
     identity: { type: String },
@@ -80,28 +67,7 @@ export class AppContent extends LitElement {
           <h3 class="text-base font-semibold text-[#0F172A]">${card.title}</h3>
           <p class="text-sm leading-relaxed text-[#64748B]">${card.description}</p>
         </div>
-        <button
-          type="button"
-          class="mt-1 flex items-center gap-1.5 text-sm font-semibold text-[#0B3B78] transition-colors duration-150 ease-out hover:text-[#082a58]"
-        >
-          Abrir
-          <lucide-icon name="arrow-right"></lucide-icon>
-        </button>
       </div>
-    `
-  }
-
-  private renderQuickAction(action: QuickAction) {
-    return html`
-      <button
-        type="button"
-        class="flex items-center gap-3 rounded-2xl border border-[#E2E8F0] bg-white p-5 text-left transition-colors duration-150 ease-out hover:border-[#0B3B78]/20 hover:bg-[#EFF6FF]"
-      >
-        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EFF6FF] text-[#0B3B78]">
-          <lucide-icon name=${action.icon}></lucide-icon>
-        </div>
-        <span class="text-sm font-semibold text-[#0F172A]">${action.label}</span>
-      </button>
     `
   }
 
@@ -139,13 +105,6 @@ export class AppContent extends LitElement {
                 `
               )}
             </ul>
-          </div>
-
-          <div class="flex flex-col gap-5">
-            <h2 class="text-base font-semibold text-[#0F172A]">Accesos rápidos</h2>
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              ${QUICK_ACTIONS.map((action) => this.renderQuickAction(action))}
-            </div>
           </div>
 
           <div class="rounded-2xl border border-[#E2E8F0] bg-white p-6">

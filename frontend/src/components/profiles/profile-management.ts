@@ -338,7 +338,6 @@ export class ProfileManagement extends LitElement {
                           <th class="px-6 py-4 font-semibold text-[#334155]">Código</th>
                           <th class="px-6 py-4 font-semibold text-[#334155]">Nombre</th>
                           <th class="px-6 py-4 font-semibold text-[#334155]">Privilegios</th>
-                          <th class="px-6 py-4 text-right font-semibold text-[#334155]">Acciones</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -366,22 +365,12 @@ export class ProfileManagement extends LitElement {
                                   ${p.privileges.length} privilegio${p.privileges.length === 1 ? '' : 's'}
                                 </span>
                               </td>
-                              <td class="h-[60px] px-6 text-right">
-                                <button
-                                  aria-label="Más acciones"
-                                  title=${p.editable ? '' : 'No editable'}
-                                  ?disabled=${!p.editable}
-                                  class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-[#64748B] transition-colors duration-150 ease-out hover:bg-[#EFF6FF] hover:text-[#0B3B78] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[#64748B]"
-                                >
-                                  <lucide-icon name="more-horizontal"></lucide-icon>
-                                </button>
-                              </td>
                             </tr>
                           `
                         )}
                         ${this.profiles.length === 0
                           ? html`<tr>
-                              <td class="px-6 py-12 text-center text-sm text-[#64748B]" colspan="4">
+                              <td class="px-6 py-12 text-center text-sm text-[#64748B]" colspan="3">
                                 No hay perfiles para mostrar.
                               </td>
                             </tr>`

@@ -128,10 +128,10 @@ export class AppHeader extends LitElement {
     const query = this.searchQuery.trim()
     return html`
       <div class="relative hidden w-full sm:block sm:max-w-[240px] md:max-w-[320px] lg:max-w-[420px]">
-        <lucide-icon
+        <!-- <lucide-icon
           name="search"
           class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]"
-        ></lucide-icon>
+        ></lucide-icon> -->
         <input
           id="aixa-global-search"
           type="text"
@@ -167,7 +167,7 @@ export class AppHeader extends LitElement {
                             <li
                               class="flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm font-medium text-[#0F172A]"
                             >
-                              <lucide-icon name=${c.icon} class="text-[#64748B]"></lucide-icon>
+                              <!-- <lucide-icon name=${c.icon} class="text-[#64748B]"></lucide-icon> -->
                               ${c.label}
                             </li>
                           `
@@ -221,16 +221,6 @@ export class AppHeader extends LitElement {
                   <lucide-icon name="user" class="text-[#64748B]"></lucide-icon>
                   Mi perfil
                 </a>
-                <button
-                  class="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm font-medium text-[#0F172A] transition-colors duration-150 ease-out hover:bg-slate-50"
-                  @click=${() => {
-                    this.userMenuOpen = false
-                    this.dispatchEvent(new CustomEvent('aixa-change-company', { bubbles: true }))
-                  }}
-                >
-                  <lucide-icon name="building-2" class="text-[#64748B]"></lucide-icon>
-                  Cambiar empresa
-                </button>
                 <a
                   href="/configuracion"
                   class="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-[#0F172A] transition-colors duration-150 ease-out hover:bg-slate-50"
@@ -271,23 +261,6 @@ export class AppHeader extends LitElement {
 
         <div class="flex shrink-0 items-center gap-6">
           ${this.renderSyncStatus()}
-
-          <button
-            aria-label="Notificaciones"
-            class="relative rounded-xl p-2 text-[#64748B] transition-colors duration-150 ease-out hover:bg-slate-50 hover:text-[#0F172A]"
-          >
-            <lucide-icon name="bell"></lucide-icon>
-            ${this.hasNotifications
-              ? html`<span class="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-blue-600"></span>`
-              : nothing}
-          </button>
-
-          <button
-            aria-label="Ayuda"
-            class="rounded-xl p-2 text-[#64748B] transition-colors duration-150 ease-out hover:bg-slate-50 hover:text-[#0F172A]"
-          >
-            <lucide-icon name="circle-help"></lucide-icon>
-          </button>
 
           <div class="h-6 w-px bg-slate-100"></div>
 

@@ -153,21 +153,7 @@ export class AppSidebar extends LitElement {
         </div>
 
         <div class="mx-4 border-t border-slate-100"></div>
-
-        <nav class="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
-          <ul class="flex flex-col gap-1">
-            ${this.primaryNav.map((item) => this.renderNavItem(item))}
-          </ul>
-        </nav>
-
-        <div class="mx-4 border-t border-slate-100"></div>
-
-        <ul class="flex flex-col gap-1 px-3 py-4">
-          ${this.settingsNav.map((item) => this.renderNavItem(item))}
-        </ul>
-
-        <div class="mx-4 border-t border-slate-100"></div>
-
+        
         <div class="px-3 py-4">
           <button
             @click=${this.toggleCollapsed}
@@ -184,6 +170,20 @@ export class AppSidebar extends LitElement {
             ${this.collapsed ? nothing : html`<span>Colapsar</span>`}
           </button>
         </div>
+
+        <nav class="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
+          <ul class="flex flex-col gap-1">
+            ${this.primaryNav.map((item) => this.renderNavItem(item))}
+          </ul>
+        </nav>
+
+        <div class="mx-4 border-t border-slate-100"></div>
+
+        <ul class="flex flex-col gap-1 px-3 py-4">
+          ${this.settingsNav.map((item) => this.renderNavItem(item))}
+        </ul>
+
+        <div class="mx-4 border-t border-slate-100"></div>
 
         <div class="mx-4 border-t border-slate-100"></div>
 

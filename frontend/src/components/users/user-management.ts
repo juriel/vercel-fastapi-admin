@@ -356,7 +356,6 @@ export class UserManagement extends LitElement {
                           <th class="px-6 py-4 font-semibold text-[#334155]">Nombre</th>
                           <th class="px-6 py-4 font-semibold text-[#334155]">Email</th>
                           <th class="px-6 py-4 font-semibold text-[#334155]">Activo</th>
-                          <th class="px-6 py-4 text-right font-semibold text-[#334155]">Acciones</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -388,20 +387,12 @@ export class UserManagement extends LitElement {
                                       >Inactivo</span
                                     >`}
                               </td>
-                              <td class="h-[60px] px-6 text-right">
-                                <button
-                                  aria-label="Más acciones"
-                                  class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-[#64748B] transition-colors duration-150 ease-out hover:bg-[#EFF6FF] hover:text-[#0B3B78]"
-                                >
-                                  <lucide-icon name="more-horizontal"></lucide-icon>
-                                </button>
-                              </td>
                             </tr>
                           `
                         )}
                         ${this.users.length === 0
                           ? html`<tr>
-                              <td class="px-6 py-12 text-center text-sm text-[#64748B]" colspan="5">
+                              <td class="px-6 py-12 text-center text-sm text-[#64748B]" colspan="4">
                                 No hay usuarios para mostrar.
                               </td>
                             </tr>`
