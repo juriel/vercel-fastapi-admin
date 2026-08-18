@@ -28,6 +28,10 @@ import iconPencil from 'lucide-static/icons/pencil.svg?raw'
 import iconTrash2 from 'lucide-static/icons/trash-2.svg?raw'
 import iconPaperclip from 'lucide-static/icons/paperclip.svg?raw'
 import iconX from 'lucide-static/icons/x.svg?raw'
+import iconEyeOff from 'lucide-static/icons/eye-off.svg?raw'
+import iconLock from 'lucide-static/icons/lock.svg?raw'
+import iconCircleCheck from 'lucide-static/icons/check-circle-2.svg?raw'
+import iconCircleAlert from 'lucide-static/icons/circle-alert.svg?raw'
 
 const ICONS = {
   home: iconHome,
@@ -57,6 +61,10 @@ const ICONS = {
   'trash-2': iconTrash2,
   paperclip: iconPaperclip,
   x: iconX,
+  'eye-off': iconEyeOff,
+  lock: iconLock,
+  'circle-check': iconCircleCheck,
+  'circle-alert': iconCircleAlert,
 } satisfies Record<string, string>
 
 export type LucideIconName = keyof typeof ICONS

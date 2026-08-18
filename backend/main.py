@@ -10,6 +10,7 @@ from models.sqlalchemy.common.base import SQLAlchemyBase
 from repositories.sqlalchemy_db_manager import SqlAlchemyDatabaseManager
 from routers.deps import require_privilege
 from routers.hello_router import router as hello_router
+from routers.me_router import router as me_router
 from routers.privilege_router import router as privilege_router
 from routers.profile_router import router as profile_router
 from routers.profile_write_router import router as profile_write_router
@@ -53,6 +54,7 @@ app.include_router(
     dependencies=[Depends(require_privilege("profiles.write"))],
 )
 app.include_router(session_router, prefix="/api")
+app.include_router(me_router, prefix="/api")
 
 # The frontend is a static Vite+Lit build. Locally it lives at ../frontend/dist
 # (built via `npm run build`); on Vercel the installCommand copies it into

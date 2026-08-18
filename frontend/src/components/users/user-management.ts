@@ -1,12 +1,19 @@
-import { LitElement, html } from 'lit'
+import { LitElement, html, nothing } from 'lit'
 import { apiClient, ApiError } from '../../lib/api-client'
+import { Session } from '../../session/session'
 import '../common/lucide-icon'
+
+interface ProfileSummary {
+  code: string
+  name: string
+}
 
 interface UserRecord {
   login: string
   name?: string | null
   email?: string | null
   active?: number | null
+  profiles?: ProfileSummary[]
 }
 
 function initials(name: string): string {
@@ -18,12 +25,14 @@ function initials(name: string): string {
 
 type Modal = 'none' | 'create' | 'edit' | 'delete'
 
+const MIN_PASSWORD_LENGTH = 8
+
 function describeError(err: unknown, fallback: string): string {
   if (err instanceof ApiError && err.status === 403) {
     return 'No tienes permiso para realizar esta acción.'
   }
   if (err instanceof ApiError && err.status === 400) {
-    return 'Ese usuario ya existe.'
+    return err.message || 'Ese usuario ya existe.'
   }
   return fallback
 }
@@ -40,6 +49,7 @@ interface UserPageResponse {
 export class UserManagement extends LitElement {
   static properties = {
     users: { type: Array },
+    allProfiles: { type: Array },
     filter: { type: String },
     page: { type: Number },
     total: { type: Number },
@@ -51,12 +61,16 @@ export class UserManagement extends LitElement {
     formName: { type: String },
     formEmail: { type: String },
     formPassword: { type: String },
+    formPasswordConfirm: { type: String },
     formActive: { type: Boolean },
+    formProfileCode: { type: String },
     formError: { type: String },
+    showPassword: { type: Boolean },
     submitting: { type: Boolean },
   }
 
   declare users: UserRecord[]
+  declare allProfiles: ProfileSummary[]
   declare filter: string
   declare page: number
   declare total: number
@@ -68,8 +82,11 @@ export class UserManagement extends LitElement {
   declare formName: string
   declare formEmail: string
   declare formPassword: string
+  declare formPasswordConfirm: string
   declare formActive: boolean
+  declare formProfileCode: string
   declare formError: string
+  declare showPassword: boolean
   declare submitting: boolean
 
   private filterDebounce?: ReturnType<typeof setTimeout>
@@ -77,6 +94,7 @@ export class UserManagement extends LitElement {
   constructor() {
     super()
     this.users = []
+    this.allProfiles = []
     this.filter = ''
     this.page = 1
     this.total = 0
@@ -88,8 +106,11 @@ export class UserManagement extends LitElement {
     this.formName = ''
     this.formEmail = ''
     this.formPassword = ''
+    this.formPasswordConfirm = ''
     this.formActive = true
+    this.formProfileCode = ''
     this.formError = ''
+    this.showPassword = false
     this.submitting = false
   }
 
@@ -100,6 +121,20 @@ export class UserManagement extends LitElement {
   connectedCallback() {
     super.connectedCallback()
     this.loadUsers()
+    this.loadProfiles()
+  }
+
+  private async loadProfiles() {
+    try {
+      this.allProfiles = (await apiClient.get('/profiles')) as ProfileSummary[]
+    } catch {
+      // The role picker is a nice-to-have on top of the user CRUD; if the
+      // caller lacks profiles.read this just falls back to no role picker.
+    }
+  }
+
+  private get canWrite(): boolean {
+    return Session.getInstance().can('users.write')
   }
 
   private get pageCount(): number {
@@ -144,8 +179,11 @@ export class UserManagement extends LitElement {
     this.formName = ''
     this.formEmail = ''
     this.formPassword = ''
+    this.formPasswordConfirm = ''
     this.formActive = true
+    this.formProfileCode = ''
     this.formError = ''
+    this.showPassword = false
     this.modal = 'create'
   }
 
@@ -154,9 +192,14 @@ export class UserManagement extends LitElement {
     this.formLogin = user.login
     this.formName = user.name ?? ''
     this.formEmail = user.email ?? ''
+    // The current password is never fetched or shown; this field is only
+    // populated if the admin chooses to set a new one.
     this.formPassword = ''
+    this.formPasswordConfirm = ''
     this.formActive = (user.active ?? 1) === 1
+    this.formProfileCode = user.profiles?.[0]?.code ?? ''
     this.formError = ''
+    this.showPassword = false
     this.modal = 'edit'
   }
 
@@ -174,13 +217,27 @@ export class UserManagement extends LitElement {
     e.preventDefault()
     this.formError = ''
 
-    if (this.modal === 'create' && (!this.formLogin || !this.formPassword)) {
+    const isEdit = this.modal === 'edit'
+
+    if (!isEdit && (!this.formLogin || !this.formPassword)) {
       this.formError = 'Usuario y contraseña son obligatorios.'
       return
+    }
+    if (this.formPassword || !isEdit) {
+      if (this.formPassword.length < MIN_PASSWORD_LENGTH) {
+        this.formError = `La contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`
+        return
+      }
+      if (this.formPassword !== this.formPasswordConfirm) {
+        this.formError = 'Las contraseñas no coinciden.'
+        return
+      }
     }
 
     this.submitting = true
     try {
+      const profileCodes = this.formProfileCode ? [this.formProfileCode] : []
+
       if (this.modal === 'create') {
         await apiClient.post('/users', {
           login: this.formLogin,
@@ -189,11 +246,25 @@ export class UserManagement extends LitElement {
           password: this.formPassword,
           active: this.formActive ? 1 : 0,
         })
+        // Role assignment is a public-registration concern the anonymous
+        // /users endpoint deliberately can't grant; it's applied in a
+        // second, privileged call right after the account is created.
+        if (profileCodes.length > 0) {
+          try {
+            await apiClient.put(`/users/${encodeURIComponent(this.formLogin)}`, { profile_codes: profileCodes })
+          } catch {
+            this.closeModal()
+            this.error = 'Usuario creado, pero no se pudo asignar el rol. Edítalo para intentarlo de nuevo.'
+            await this.loadUsers()
+            return
+          }
+        }
       } else if (this.modal === 'edit' && this.target) {
         const payload: Record<string, unknown> = {
           name: this.formName || undefined,
           email: this.formEmail || undefined,
           active: this.formActive ? 1 : 0,
+          profile_codes: profileCodes,
         }
         if (this.formPassword) payload.password = this.formPassword
         await apiClient.put(`/users/${encodeURIComponent(this.target.login)}`, payload)
@@ -223,59 +294,157 @@ export class UserManagement extends LitElement {
     }
   }
 
+  private renderPasswordField(opts: {
+    value: string
+    placeholder: string
+    autocomplete: 'new-password' | 'current-password'
+    onInput: (value: string) => void
+  }) {
+    return html`
+      <div class="relative">
+        <input
+          type=${this.showPassword ? 'text' : 'password'}
+          placeholder=${opts.placeholder}
+          autocomplete=${opts.autocomplete}
+          class="h-11 w-full rounded-xl border border-[#E2E8F0] bg-white pl-4 pr-11 text-sm font-medium text-[#0F172A] outline-none transition-colors duration-150 ease-out placeholder:font-normal placeholder:text-[#94A3B8] focus:border-[#0B3B78] focus:ring-4 focus:ring-[#0B3B78]/10"
+          .value=${opts.value}
+          @input=${(e: Event) => opts.onInput((e.target as HTMLInputElement).value)}
+        />
+        <button
+          type="button"
+          tabindex="-1"
+          aria-label=${this.showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+          class="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#0F172A]"
+          @click=${() => (this.showPassword = !this.showPassword)}
+        >
+          <lucide-icon name=${this.showPassword ? 'eye-off' : 'eye'}></lucide-icon>
+        </button>
+      </div>
+    `
+  }
+
+  private renderRoleField() {
+    if (this.allProfiles.length === 0) return nothing
+    return html`
+      <select
+        class="h-11 w-full rounded-xl border border-[#E2E8F0] bg-white px-4 text-sm font-medium text-[#0F172A] outline-none transition-colors duration-150 ease-out focus:border-[#0B3B78] focus:ring-4 focus:ring-[#0B3B78]/10"
+        .value=${this.formProfileCode}
+        @change=${(e: Event) => (this.formProfileCode = (e.target as HTMLSelectElement).value)}
+      >
+        <option value="">Sin rol</option>
+        ${this.allProfiles.map(
+          (p) => html`<option value=${p.code}>${p.name}</option>`
+        )}
+      </select>
+    `
+  }
+
+  private renderField(opts: {
+    type: 'text' | 'email'
+    value: string
+    placeholder: string
+    disabled?: boolean
+    onInput: (value: string) => void
+  }) {
+    return html`
+      <input
+        type=${opts.type}
+        placeholder=${opts.placeholder}
+        ?disabled=${opts.disabled}
+        class="h-11 w-full rounded-xl border border-[#E2E8F0] bg-white px-4 text-sm font-medium text-[#0F172A] outline-none transition-colors duration-150 ease-out placeholder:font-normal placeholder:text-[#94A3B8] focus:border-[#0B3B78] focus:ring-4 focus:ring-[#0B3B78]/10 disabled:bg-[#F8FAFC] disabled:text-[#94A3B8]"
+        .value=${opts.value}
+        @input=${(e: Event) => opts.onInput((e.target as HTMLInputElement).value)}
+      />
+    `
+  }
+
   private renderFormModal() {
     const isEdit = this.modal === 'edit'
     return html`
       <div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
         <form
-          class="card bg-white p-6 rounded-lg shadow-lg w-full max-w-sm"
+          class="flex w-full max-w-md flex-col gap-4 rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-lg"
           @submit=${this.submitForm}
         >
-          <h2 class="text-lg font-semibold m-0 mb-1 text-[var(--primary-color2)]">
+          <h2 class="text-lg font-semibold text-[#0F172A]">
             ${isEdit ? 'Editar usuario' : 'Crear usuario'}
           </h2>
-          <input
-            type="text"
-            placeholder="Usuario"
-            class="field"
-            .value=${this.formLogin}
-            ?disabled=${isEdit}
-            @input=${(e: Event) => (this.formLogin = (e.target as HTMLInputElement).value)}
-          />
-          <input
-            type="text"
-            placeholder="Nombre"
-            class="field"
-            .value=${this.formName}
-            @input=${(e: Event) => (this.formName = (e.target as HTMLInputElement).value)}
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            class="field"
-            .value=${this.formEmail}
-            @input=${(e: Event) => (this.formEmail = (e.target as HTMLInputElement).value)}
-          />
-          <input
-            type="password"
-            placeholder=${isEdit ? 'Nueva contraseña (opcional)' : 'Contraseña'}
-            class="field"
-            autocomplete="new-password"
-            .value=${this.formPassword}
-            @input=${(e: Event) => (this.formPassword = (e.target as HTMLInputElement).value)}
-          />
-          <label class="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              .checked=${this.formActive}
-              @change=${(e: Event) => (this.formActive = (e.target as HTMLInputElement).checked)}
-            />
-            Activo
-          </label>
-          ${this.formError ? html`<p class="error-text">${this.formError}</p>` : ''}
-          <div class="flex gap-2 justify-end mt-2">
-            <button type="button" class="btn-outline" @click=${this.closeModal}>Cancelar</button>
-            <button type="submit" class="btn" ?disabled=${this.submitting}>
+
+          <div class="flex flex-col gap-3">
+            ${this.renderField({
+              type: 'text',
+              value: this.formLogin,
+              placeholder: 'Usuario',
+              disabled: isEdit,
+              onInput: (v) => (this.formLogin = v),
+            })}
+            ${this.renderField({
+              type: 'text',
+              value: this.formName,
+              placeholder: 'Nombre',
+              onInput: (v) => (this.formName = v),
+            })}
+            ${this.renderField({
+              type: 'email',
+              value: this.formEmail,
+              placeholder: 'Email',
+              onInput: (v) => (this.formEmail = v),
+            })}
+            ${this.renderPasswordField({
+              value: this.formPassword,
+              placeholder: isEdit ? 'Nueva contraseña (opcional)' : 'Contraseña',
+              autocomplete: 'new-password',
+              onInput: (v) => (this.formPassword = v),
+            })}
+            ${this.renderPasswordField({
+              value: this.formPasswordConfirm,
+              placeholder: 'Confirmar contraseña',
+              autocomplete: 'new-password',
+              onInput: (v) => (this.formPasswordConfirm = v),
+            })}
+            <label class="flex items-center gap-2 text-sm font-medium text-[#0F172A]">
+              <input
+                type="checkbox"
+                class="h-4 w-4 rounded border-[#E2E8F0] text-[#0B3B78] focus:ring-[#0B3B78]"
+                .checked=${this.formActive}
+                @change=${(e: Event) => (this.formActive = (e.target as HTMLInputElement).checked)}
+              />
+              Activo
+            </label>
+            ${this.allProfiles.length > 0
+              ? html`
+                  <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-medium text-[#94A3B8]">Rol</label>
+                    ${this.renderRoleField()}
+                  </div>
+                `
+              : nothing}
+          </div>
+
+          ${this.formError
+            ? html`
+                <p
+                  class="flex items-center gap-2 rounded-lg border border-red-100 bg-red-50 px-3 py-2 text-sm text-red-600"
+                >
+                  <lucide-icon name="circle-alert" class="shrink-0"></lucide-icon>
+                  ${this.formError}
+                </p>
+              `
+            : nothing}
+
+          <div class="flex justify-end gap-3">
+            <button
+              type="button"
+              class="flex h-11 items-center rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
+              @click=${this.closeModal}
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="flex h-11 items-center rounded-xl bg-[#0B3B78] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90 disabled:cursor-default disabled:opacity-60"
+              ?disabled=${this.submitting}
+            >
               ${this.submitting ? 'Guardando...' : 'Guardar'}
             </button>
           </div>
@@ -287,17 +456,24 @@ export class UserManagement extends LitElement {
   private renderDeleteModal() {
     return html`
       <div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-        <div class="card bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
-          <h2 class="text-lg font-semibold m-0 mb-1 text-[var(--primary-color2)]">
-            Eliminar usuario
-          </h2>
-          <p class="text-sm">
-            ¿Seguro que quieres eliminar a <strong>${this.target?.login}</strong>? Esta acción no
-            se puede deshacer.
+        <div class="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-lg">
+          <h2 class="text-lg font-semibold text-[#0F172A]">Eliminar usuario</h2>
+          <p class="text-sm text-[#64748B]">
+            ¿Seguro que quieres eliminar a <strong class="text-[#0F172A]">${this.target?.login}</strong>?
+            Esta acción no se puede deshacer.
           </p>
-          <div class="flex gap-2 justify-end mt-2">
-            <button class="btn-outline" @click=${this.closeModal}>Cancelar</button>
-            <button class="btn" ?disabled=${this.submitting} @click=${this.confirmDelete}>
+          <div class="flex justify-end gap-3">
+            <button
+              class="flex h-11 items-center rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
+              @click=${this.closeModal}
+            >
+              Cancelar
+            </button>
+            <button
+              class="flex h-11 items-center rounded-xl bg-red-600 px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90 disabled:cursor-default disabled:opacity-60"
+              ?disabled=${this.submitting}
+              @click=${this.confirmDelete}
+            >
               ${this.submitting ? 'Eliminando...' : 'Eliminar'}
             </button>
           </div>
@@ -307,6 +483,7 @@ export class UserManagement extends LitElement {
   }
 
   render() {
+    const canWrite = this.canWrite
     return html`
       <main class="flex-1 min-h-100 bg-[#F8FAFC] p-8">
         <div class="flex flex-col gap-6">
@@ -332,17 +509,23 @@ export class UserManagement extends LitElement {
                 <lucide-icon name="refresh-cw"></lucide-icon>
                 Actualizar
               </button>
-              <button
-                class="flex h-12 items-center gap-2 rounded-xl bg-[#0B3B78] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90"
-                @click=${this.openCreate}
-              >
-                <lucide-icon name="user-plus"></lucide-icon>
-                Crear usuario
-              </button>
+              ${canWrite
+                ? html`
+                    <button
+                      class="flex h-12 items-center gap-2 rounded-xl bg-[#0B3B78] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90"
+                      @click=${this.openCreate}
+                    >
+                      <lucide-icon name="user-plus"></lucide-icon>
+                      Crear usuario
+                    </button>
+                  `
+                : nothing}
             </div>
           </div>
 
-          ${this.error ? html`<p class="error-text">${this.error}</p>` : ''}
+          ${this.error
+            ? html`<p class="error-text">${this.error}</p>`
+            : nothing}
 
           ${this.loading
             ? html`<p class="text-sm text-[#64748B]">Cargando...</p>`
@@ -355,7 +538,11 @@ export class UserManagement extends LitElement {
                           <th class="px-6 py-4 font-semibold text-[#334155]">Usuario</th>
                           <th class="px-6 py-4 font-semibold text-[#334155]">Nombre</th>
                           <th class="px-6 py-4 font-semibold text-[#334155]">Email</th>
+                          <th class="px-6 py-4 font-semibold text-[#334155]">Rol</th>
                           <th class="px-6 py-4 font-semibold text-[#334155]">Activo</th>
+                          ${canWrite
+                            ? html`<th class="px-6 py-4 font-semibold text-[#334155]">Acciones</th>`
+                            : nothing}
                         </tr>
                       </thead>
                       <tbody>
@@ -377,6 +564,14 @@ export class UserManagement extends LitElement {
                               <td class="h-[60px] px-6 text-[#0F172A]">${u.name || '—'}</td>
                               <td class="h-[60px] px-6 text-[#64748B]">${u.email || '—'}</td>
                               <td class="h-[60px] px-6">
+                                ${u.profiles && u.profiles.length > 0
+                                  ? html`<span
+                                      class="inline-flex items-center rounded-full bg-[#EFF6FF] px-2.5 py-1 text-xs font-medium text-[#0B3B78]"
+                                      >${u.profiles.map((p) => p.name).join(', ')}</span
+                                    >`
+                                  : html`<span class="text-xs text-[#94A3B8]">Sin rol</span>`}
+                              </td>
+                              <td class="h-[60px] px-6">
                                 ${u.active
                                   ? html`<span
                                       class="inline-flex items-center rounded-full bg-[#ECFDF5] px-2.5 py-1 text-xs font-medium text-[#059669]"
@@ -387,16 +582,41 @@ export class UserManagement extends LitElement {
                                       >Inactivo</span
                                     >`}
                               </td>
+                              ${canWrite
+                                ? html`
+                                    <td class="h-[60px] px-6">
+                                      <div class="flex items-center gap-1">
+                                        <button
+                                          aria-label="Editar usuario"
+                                          class="flex h-9 w-9 items-center justify-center rounded-lg text-[#64748B] transition-colors duration-150 ease-out hover:bg-[#EFF6FF] hover:text-[#0B3B78]"
+                                          @click=${() => this.openEdit(u)}
+                                        >
+                                          <lucide-icon name="pencil"></lucide-icon>
+                                        </button>
+                                        <button
+                                          aria-label="Eliminar usuario"
+                                          class="flex h-9 w-9 items-center justify-center rounded-lg text-[#64748B] transition-colors duration-150 ease-out hover:bg-red-50 hover:text-red-600"
+                                          @click=${() => this.openDelete(u)}
+                                        >
+                                          <lucide-icon name="trash-2"></lucide-icon>
+                                        </button>
+                                      </div>
+                                    </td>
+                                  `
+                                : nothing}
                             </tr>
                           `
                         )}
                         ${this.users.length === 0
                           ? html`<tr>
-                              <td class="px-6 py-12 text-center text-sm text-[#64748B]" colspan="4">
+                              <td
+                                class="px-6 py-12 text-center text-sm text-[#64748B]"
+                                colspan=${canWrite ? 6 : 5}
+                              >
                                 No hay usuarios para mostrar.
                               </td>
                             </tr>`
-                          : ''}
+                          : nothing}
                       </tbody>
                     </table>
                   </div>
@@ -433,8 +653,8 @@ export class UserManagement extends LitElement {
                 </div>
               `}
         </div>
-        ${this.modal === 'create' || this.modal === 'edit' ? this.renderFormModal() : ''}
-        ${this.modal === 'delete' ? this.renderDeleteModal() : ''}
+        ${this.modal === 'create' || this.modal === 'edit' ? this.renderFormModal() : nothing}
+        ${this.modal === 'delete' ? this.renderDeleteModal() : nothing}
       </main>
     `
   }

@@ -3,6 +3,7 @@ import { Router } from '@vaadin/router'
 import './views/home-view'
 import './views/users-view'
 import './views/profiles-view'
+import './views/my-profile-view'
 import './auth/login-page'
 import './auth/register-page'
 import './auth/forgot-password-page'
@@ -21,6 +22,7 @@ export class AppRoot extends LitElement {
       { path: '/forgot-password', component: 'forgot-password-page' },
       { path: '/users', component: 'users-view' },
       { path: '/profiles', component: 'profiles-view' },
+      { path: '/mi-perfil', component: 'my-profile-view' },
       { path: '(.*)', redirect: '/' },
     ])
   }

@@ -66,6 +66,7 @@
   home-view,
   users-view,
   profiles-view,
+  my-profile-view,
   charges-view,
   app-header,
   app-sidebar,
@@ -73,6 +74,7 @@
   app-footer,
   user-management,
   profile-management,
+  account-settings,
   charge-management {
     display: block;
   }
@@ -107,6 +109,7 @@
   app-content,
   user-management,
   profile-management,
+  account-settings,
   charge-management {
     font-family: 'Inter', system-ui, sans-serif;
   }
@@ -118,6 +121,7 @@
   app-content,
   user-management,
   profile-management,
+  account-settings,
   charge-management {
     flex: 1 1 0%;
     min-width: 0;

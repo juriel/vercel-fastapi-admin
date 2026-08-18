@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 
 from models.entities.privilege import Privilege
 from models.entities.profile import Profile
@@ -26,6 +26,26 @@ class ProfileService(SQLAlchemyService[Profile]):
 
     def find_all(self) -> List[Profile]:
         return self.session.query(Profile).order_by(Profile.code).all()
+
+    def find_by_user_logins(self, logins: List[str]) -> Dict[str, List[Profile]]:
+        if not logins:
+            return {}
+        rows = (
+            self.session.query(UserProfile.login, Profile)
+            .join(Profile, UserProfile.profile == Profile.code)
+            .filter(UserProfile.login.in_(logins))
+            .all()
+        )
+        result: Dict[str, List[Profile]] = {login: [] for login in logins}
+        for login, profile in rows:
+            result[login].append(profile)
+        return result
+
+    def set_user_profiles(self, login: str, profile_codes: List[str]) -> None:
+        self.session.query(UserProfile).filter(UserProfile.login == login).delete()
+        for code in dict.fromkeys(profile_codes):
+            self.session.add(UserProfile(login=login, profile=code))
+        self.session.flush()
 
     def privileges_for(self, profile_code: str) -> List[Privilege]:
         return (
