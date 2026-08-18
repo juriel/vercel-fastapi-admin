@@ -65,12 +65,15 @@
   forgot-password-page,
   home-view,
   users-view,
+  profiles-view,
+  charges-view,
   app-header,
   app-sidebar,
   app-content,
   app-footer,
   user-management,
-  profile-management {
+  profile-management,
+  charge-management {
     display: block;
   }
 
@@ -103,7 +106,8 @@
   app-header,
   app-content,
   user-management,
-  profile-management {
+  profile-management,
+  charge-management {
     font-family: 'Inter', system-ui, sans-serif;
   }
 
@@ -113,7 +117,8 @@
      custom element itself, which is the actual flex item). */
   app-content,
   user-management,
-  profile-management {
+  profile-management,
+  charge-management {
     flex: 1 1 0%;
     min-width: 0;
   }

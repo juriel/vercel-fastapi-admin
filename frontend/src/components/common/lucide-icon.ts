@@ -22,6 +22,12 @@ import iconBookOpen from 'lucide-static/icons/book-open.svg?raw'
 import iconPlug2 from 'lucide-static/icons/plug-2.svg?raw'
 import iconArrowRight from 'lucide-static/icons/arrow-right.svg?raw'
 import iconPlus from 'lucide-static/icons/plus.svg?raw'
+import iconReceipt from 'lucide-static/icons/receipt.svg?raw'
+import iconEye from 'lucide-static/icons/eye.svg?raw'
+import iconPencil from 'lucide-static/icons/pencil.svg?raw'
+import iconTrash2 from 'lucide-static/icons/trash-2.svg?raw'
+import iconPaperclip from 'lucide-static/icons/paperclip.svg?raw'
+import iconX from 'lucide-static/icons/x.svg?raw'
 
 const ICONS = {
   home: iconHome,
@@ -45,6 +51,12 @@ const ICONS = {
   'plug-2': iconPlug2,
   'arrow-right': iconArrowRight,
   plus: iconPlus,
+  receipt: iconReceipt,
+  eye: iconEye,
+  pencil: iconPencil,
+  'trash-2': iconTrash2,
+  paperclip: iconPaperclip,
+  x: iconX,
 } satisfies Record<string, string>
 
 export type LucideIconName = keyof typeof ICONS
