@@ -109,20 +109,20 @@ export class AppHeader extends LitElement {
     window.location.href = '/login'
   }
 
-  private renderSyncStatus() {
-    const config: Record<SyncStatus, { dot: string; label: string }> = {
-      synced: { dot: 'bg-emerald-500', label: 'Todo guardado' },
-      syncing: { dot: 'bg-amber-500', label: 'Sincronizando…' },
-      offline: { dot: 'bg-slate-300', label: 'Sin conexión' },
-    }
-    const { dot, label } = config[this.syncStatus]
-    return html`
-      <div class="hidden items-center gap-2 md:flex" title=${label}>
-        <span class="h-1.5 w-1.5 shrink-0 rounded-full ${dot}"></span>
-        <span class="text-xs font-medium text-[#94A3B8]">${label}</span>
-      </div>
-    `
-  }
+  // private renderSyncStatus() {
+  //   const config: Record<SyncStatus, { dot: string; label: string }> = {
+  //     synced: { dot: 'bg-emerald-500', label: 'Todo guardado' },
+  //     syncing: { dot: 'bg-amber-500', label: 'Sincronizando…' },
+  //     offline: { dot: 'bg-slate-300', label: 'Sin conexión' },
+  //   }
+  //   const { dot, label } = config[this.syncStatus]
+  //   return html`
+  //     <div class="hidden items-center gap-2 md:flex" title=${label}>
+  //       <span class="h-1.5 w-1.5 shrink-0 rounded-full ${dot}"></span>
+  //       <span class="text-xs font-medium text-[#94A3B8]">${label}</span>
+  //     </div>
+  //   `
+  // }
 
 /**   private renderSearch() {
     const query = this.searchQuery.trim()
@@ -264,7 +264,6 @@ export class AppHeader extends LitElement {
 
 
         <div class="flex shrink-0 items-center gap-6">
-          ${this.renderSyncStatus()}
 
           <div class="h-6 w-px bg-slate-100"></div>
 
