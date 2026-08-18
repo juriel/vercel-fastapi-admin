@@ -119,6 +119,10 @@
   }
 }
 
+.min-h-100 {
+  min-height: 100%;
+}
+
 @layer components {
   .card {
     @apply flex flex-col gap-3 w-80;

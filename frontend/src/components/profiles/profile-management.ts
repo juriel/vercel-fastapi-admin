@@ -306,7 +306,7 @@ export class ProfileManagement extends LitElement {
 
   render() {
     return html`
-      <main class="flex-1 bg-[#F8FAFC] p-8">
+      <main class="flex-1 min-h-100 bg-[#F8FAFC] p-8">
         <div class="flex flex-col gap-6">
           <div class="flex items-center justify-end gap-3">
             <button
