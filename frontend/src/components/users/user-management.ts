@@ -223,6 +223,10 @@ export class UserManagement extends LitElement {
       this.formError = 'Usuario y contraseña son obligatorios.'
       return
     }
+    if (!isEdit && this.allProfiles.length > 0 && !this.formProfileCode) {
+      this.formError = 'Selecciona un rol para el usuario.'
+      return
+    }
     if (this.formPassword || !isEdit) {
       if (this.formPassword.length < MIN_PASSWORD_LENGTH) {
         this.formError = `La contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`
@@ -323,7 +327,7 @@ export class UserManagement extends LitElement {
     `
   }
 
-  private renderRoleField() {
+  private renderRoleField(isEdit: boolean) {
     if (this.allProfiles.length === 0) return nothing
     return html`
       <select
@@ -331,7 +335,7 @@ export class UserManagement extends LitElement {
         .value=${this.formProfileCode}
         @change=${(e: Event) => (this.formProfileCode = (e.target as HTMLSelectElement).value)}
       >
-        <option value="">Sin rol</option>
+        <option value="">${isEdit ? 'Sin rol' : 'Selecciona un rol...'}</option>
         ${this.allProfiles.map(
           (p) => html`<option value=${p.code}>${p.name}</option>`
         )}
@@ -414,8 +418,10 @@ export class UserManagement extends LitElement {
             ${this.allProfiles.length > 0
               ? html`
                   <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-medium text-[#94A3B8]">Rol</label>
-                    ${this.renderRoleField()}
+                    <label class="text-xs font-medium text-[#94A3B8]"
+                      >Rol${isEdit ? '' : ' *'}</label
+                    >
+                    ${this.renderRoleField(isEdit)}
                   </div>
                 `
               : nothing}
