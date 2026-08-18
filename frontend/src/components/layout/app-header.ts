@@ -124,7 +124,7 @@ export class AppHeader extends LitElement {
     `
   }
 
-  private renderSearch() {
+/**   private renderSearch() {
     const query = this.searchQuery.trim()
     return html`
       <div class="relative hidden w-full sm:block sm:max-w-[240px] md:max-w-[320px] lg:max-w-[420px]">
@@ -132,7 +132,7 @@ export class AppHeader extends LitElement {
           name="search"
           class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]"
         ></lucide-icon> -->
-        <input
+        <!-- <input
           id="aixa-global-search"
           type="text"
           placeholder="Buscar en AIXA..."
@@ -141,12 +141,7 @@ export class AppHeader extends LitElement {
           @focus=${() => (this.searchOpen = true)}
           @input=${this.onSearchInput}
           class="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-10 pr-14 text-sm font-medium text-[#0F172A] outline-none transition-colors duration-150 ease-out placeholder:text-[#94A3B8] placeholder:font-normal focus:border-blue-300 focus:bg-white"
-        />
-        <kbd
-          class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-[11px] font-medium text-[#94A3B8]"
-        >
-          ${navigator.platform.toUpperCase().includes('MAC') ? '⌘K' : 'Ctrl K'}
-        </kbd>
+        /> -->
 
         ${this.searchOpen
           ? html`
@@ -180,6 +175,7 @@ export class AppHeader extends LitElement {
       </div>
     `
   }
+  */
 
   private renderUserMenu() {
     return html`
@@ -248,16 +244,24 @@ export class AppHeader extends LitElement {
       <header
         class="flex h-[72px] shrink-0 items-center justify-between gap-6 border-b border-slate-100 bg-white px-8"
       >
-        <div class="flex min-w-0 flex-col justify-center">
-          <h1 class="truncate text-[17px] font-semibold leading-tight text-[#0F172A]">
-            ${this.pageTitle}
-          </h1>
-          ${this.pageSubtitle
-            ? html`<p class="truncate text-sm text-[#64748B]">${this.pageSubtitle}</p>`
-            : nothing}
+        <div class="flex shrink-0 items-center gap-6">
+          <a href="/" class="flex items-center gap-2.5 overflow-hidden">
+            <img src="/aixa-logo.svg" alt="AIXA" class="h-7 w-7 shrink-0" />
+            <span class="text-lg font-bold tracking-tight text-[#0F172A]">AIXA</span>
+          </a>
+
+          <div class="h-6 w-px bg-slate-100"></div>
+
+          <div class="flex min-w-0 flex-col justify-center">
+            <h1 class="truncate text-[17px] font-semibold leading-tight text-[#0F172A]">
+              ${this.pageTitle}
+            </h1>
+            ${this.pageSubtitle
+              ? html`<p class="truncate text-sm text-[#64748B]">${this.pageSubtitle}</p>`
+              : nothing}
+          </div>
         </div>
 
-        <div class="flex flex-1 justify-center">${this.renderSearch()}</div>
 
         <div class="flex shrink-0 items-center gap-6">
           ${this.renderSyncStatus()}

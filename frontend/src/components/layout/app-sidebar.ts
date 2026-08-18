@@ -143,17 +143,6 @@ export class AppSidebar extends LitElement {
         class="flex shrink-0 flex-col border-r border-slate-100 bg-white transition-[width] duration-150 ease-out"
         style="width: ${this.collapsed ? '72px' : '260px'}"
       >
-        <div class="flex items-center ${this.collapsed ? 'justify-center' : 'justify-between'} px-4 py-5">
-          <a href="/" class="flex items-center gap-2.5 overflow-hidden">
-            <img src="/aixa-logo.svg" alt="AIXA" class="h-7 w-7 shrink-0" />
-            ${this.collapsed
-              ? nothing
-              : html`<span class="text-lg font-bold tracking-tight text-[#0F172A]">AIXA</span>`}
-          </a>
-        </div>
-
-        <div class="mx-4 border-t border-slate-100"></div>
-        
         <div class="px-3 py-4">
           <button
             @click=${this.toggleCollapsed}
