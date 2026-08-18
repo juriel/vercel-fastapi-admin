@@ -1,6 +1,7 @@
 import { LitElement, html, nothing } from 'lit'
 import { apiClient, ApiError } from '../../lib/api-client'
 import { Session } from '../../session/session'
+import { toast } from '../../lib/toast'
 import '../common/lucide-icon'
 
 interface Privilege {
@@ -178,13 +179,16 @@ export class ProfileManagement extends LitElement {
           name: this.formName,
           privilege_codes: [...this.formPrivilegeCodes],
         })
+        this.closeModal()
+        toast.success('Perfil creado correctamente.')
       } else if (this.modal === 'edit' && this.target) {
         await apiClient.put(`/profiles/${encodeURIComponent(this.target.code)}`, {
           name: this.formName,
           privilege_codes: [...this.formPrivilegeCodes],
         })
+        this.closeModal()
+        toast.success('Perfil actualizado correctamente.')
       }
-      this.closeModal()
       await this.loadProfiles()
     } catch (err) {
       this.formError = describeError(err, 'No se pudo guardar el perfil.')
@@ -199,10 +203,11 @@ export class ProfileManagement extends LitElement {
     try {
       await apiClient.delete(`/profiles/${encodeURIComponent(this.target.code)}`)
       this.closeModal()
+      toast.success('Perfil eliminado correctamente.')
       await this.loadProfiles()
     } catch (err) {
-      this.error = describeError(err, 'No se pudo eliminar el perfil.')
       this.closeModal()
+      toast.error(describeError(err, 'No se pudo eliminar el perfil.'))
     } finally {
       this.submitting = false
     }

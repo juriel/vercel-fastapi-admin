@@ -1,6 +1,7 @@
 import { LitElement, html, nothing } from 'lit'
 import { apiClient, ApiError } from '../../lib/api-client'
 import { Session } from '../../session/session'
+import { toast } from '../../lib/toast'
 import '../common/lucide-icon'
 
 interface ProfileSummary {
@@ -258,11 +259,13 @@ export class UserManagement extends LitElement {
             await apiClient.put(`/users/${encodeURIComponent(this.formLogin)}`, { profile_codes: profileCodes })
           } catch {
             this.closeModal()
-            this.error = 'Usuario creado, pero no se pudo asignar el rol. Edítalo para intentarlo de nuevo.'
+            toast.error('Usuario creado, pero no se pudo asignar el rol. Edítalo para intentarlo de nuevo.')
             await this.loadUsers()
             return
           }
         }
+        this.closeModal()
+        toast.success('Usuario creado correctamente.')
       } else if (this.modal === 'edit' && this.target) {
         const payload: Record<string, unknown> = {
           name: this.formName || undefined,
@@ -272,8 +275,9 @@ export class UserManagement extends LitElement {
         }
         if (this.formPassword) payload.password = this.formPassword
         await apiClient.put(`/users/${encodeURIComponent(this.target.login)}`, payload)
+        this.closeModal()
+        toast.success('Usuario actualizado correctamente.')
       }
-      this.closeModal()
       await this.loadUsers()
     } catch (err) {
       this.formError = describeError(err, 'No se pudo guardar el usuario.')
@@ -284,15 +288,17 @@ export class UserManagement extends LitElement {
 
   private async confirmDelete() {
     if (!this.target) return
+    const login = this.target.login
     this.submitting = true
     try {
-      await apiClient.delete(`/users/${encodeURIComponent(this.target.login)}`)
+      await apiClient.delete(`/users/${encodeURIComponent(login)}`)
       this.closeModal()
+      toast.success('Usuario eliminado correctamente.')
       if (this.users.length === 1 && this.page > 1) this.page -= 1
       await this.loadUsers()
     } catch (err) {
-      this.error = describeError(err, 'No se pudo eliminar el usuario.')
       this.closeModal()
+      toast.error(describeError(err, 'No se pudo eliminar el usuario.'))
     } finally {
       this.submitting = false
     }

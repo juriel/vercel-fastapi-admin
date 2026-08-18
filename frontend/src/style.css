@@ -75,7 +75,8 @@
   user-management,
   profile-management,
   account-settings,
-  charge-management {
+  charge-management,
+  app-toast {
     display: block;
   }
 

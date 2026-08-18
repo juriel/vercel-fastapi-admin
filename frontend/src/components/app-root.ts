@@ -7,6 +7,7 @@ import './views/my-profile-view'
 import './auth/login-page'
 import './auth/register-page'
 import './auth/forgot-password-page'
+import './common/app-toast'
 
 export class AppRoot extends LitElement {
   createRenderRoot() {
@@ -28,7 +29,8 @@ export class AppRoot extends LitElement {
   }
 
   render() {
-    return html`<div id="outlet"></div>`
+    return html`<div id="outlet"></div>
+      <app-toast></app-toast>`
   }
 }
 
