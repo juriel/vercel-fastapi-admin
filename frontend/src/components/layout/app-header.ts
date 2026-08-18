@@ -217,10 +217,10 @@ export class AppHeader extends LitElement {
                   <lucide-icon name="user" class="text-[#64748B]"></lucide-icon>
                   Mi perfil
                 </a>
-                <a
+                <!-- <a
                   href="/configuracion"
                   class="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-[#0F172A] transition-colors duration-150 ease-out hover:bg-slate-50"
-                >
+                > -->
                   <lucide-icon name="settings" class="text-[#64748B]"></lucide-icon>
                   Configuración
                 </a>
