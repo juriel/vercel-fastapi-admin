@@ -259,7 +259,7 @@ export class AccountSettings extends LitElement {
 
   render() {
     return html`
-      <main class="flex-1 min-h-100 bg-[#F8FAFC] p-8">
+      <main class="flex-1 min-h-100 bg-[#F8FAFC] p-4 sm:p-8">
         <div class="mx-auto flex max-w-3xl flex-col gap-6">
           ${this.renderAccountCard()} ${this.renderPasswordCard()}
         </div>

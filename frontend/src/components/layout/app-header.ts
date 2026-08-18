@@ -2,6 +2,7 @@ import { LitElement, html, nothing } from 'lit'
 import { Session } from '../../session/session'
 import { apiClient } from '../../lib/api-client'
 import { initialsFromIdentity, displayNameFromIdentity } from '../../lib/identity'
+import { SIDEBAR_TOGGLE_EVENT } from './app-sidebar'
 import '../common/lucide-icon'
 import type { LucideIconName } from '../common/lucide-icon'
 
@@ -239,18 +240,30 @@ export class AppHeader extends LitElement {
     `
   }
 
+  private toggleSidebar() {
+    window.dispatchEvent(new CustomEvent(SIDEBAR_TOGGLE_EVENT))
+  }
+
   render() {
     return html`
       <header
-        class="flex h-[72px] shrink-0 items-center justify-between gap-6 border-b border-slate-100 bg-white px-8"
+        class="flex h-[72px] shrink-0 items-center justify-between gap-3 border-b border-slate-100 bg-white px-4 sm:gap-6 sm:px-6 lg:px-8"
       >
-        <div class="flex shrink-0 items-center gap-6">
-          <a href="/" class="flex items-center gap-2.5 overflow-hidden">
+        <div class="flex min-w-0 flex-1 items-center gap-3 sm:gap-6">
+          <button
+            aria-label="Abrir menú"
+            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#64748B] transition-colors duration-150 ease-out hover:bg-slate-50 hover:text-[#0F172A] lg:hidden"
+            @click=${this.toggleSidebar}
+          >
+            <lucide-icon name="menu"></lucide-icon>
+          </button>
+
+          <a href="/" class="flex shrink-0 items-center gap-2.5 overflow-hidden">
             <img src="/aixa-logo.svg" alt="AIXA" class="h-7 w-7 shrink-0" />
-            <span class="text-lg font-bold tracking-tight text-[#0F172A]">AIXA</span>
+            <span class="hidden text-lg font-bold tracking-tight text-[#0F172A] sm:inline">AIXA</span>
           </a>
 
-          <div class="h-6 w-px bg-slate-100"></div>
+          <div class="hidden h-6 w-px shrink-0 bg-slate-100 sm:block"></div>
 
           <div class="flex min-w-0 flex-col justify-center">
             <h1 class="truncate text-[17px] font-semibold leading-tight text-[#0F172A]">
@@ -262,10 +275,8 @@ export class AppHeader extends LitElement {
           </div>
         </div>
 
-
-        <div class="flex shrink-0 items-center gap-6">
-
-          <div class="h-6 w-px bg-slate-100"></div>
+        <div class="flex shrink-0 items-center gap-3 sm:gap-6">
+          <div class="hidden h-6 w-px bg-slate-100 sm:block"></div>
 
           ${this.renderUserMenu()}
         </div>

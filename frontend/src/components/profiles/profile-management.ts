@@ -360,9 +360,9 @@ export class ProfileManagement extends LitElement {
   render() {
     const canWrite = this.canWrite
     return html`
-      <main class="flex-1 min-h-100 bg-[#F8FAFC] p-8">
+      <main class="flex-1 min-h-100 bg-[#F8FAFC] p-4 sm:p-8">
         <div class="flex flex-col gap-6">
-          <div class="flex items-center justify-end gap-3">
+          <div class="flex flex-wrap items-center justify-end gap-3">
             <button
               class="flex h-12 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
               @click=${this.loadProfiles}

@@ -491,7 +491,7 @@ export class UserManagement extends LitElement {
   render() {
     const canWrite = this.canWrite
     return html`
-      <main class="flex-1 min-h-100 bg-[#F8FAFC] p-8">
+      <main class="flex-1 min-h-100 bg-[#F8FAFC] p-4 sm:p-8">
         <div class="flex flex-col gap-6">
           <div class="flex flex-wrap items-center justify-between gap-4">
             <div class="relative w-full max-w-[420px]">

@@ -74,7 +74,7 @@ export class AppContent extends LitElement {
   render() {
     const name = displayNameFromIdentity(this.identity)
     return html`
-      <main class="flex-1 bg-[#F8FAFC] p-8">
+      <main class="flex-1 bg-[#F8FAFC] p-4 sm:p-8">
         <div class="flex flex-col gap-8">
           <div class="flex flex-col gap-1.5">
             <h1 class="text-2xl font-bold text-[#0F172A]">Buenos días, ${name}</h1>

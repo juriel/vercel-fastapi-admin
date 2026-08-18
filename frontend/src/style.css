@@ -134,7 +134,7 @@
 
 @layer components {
   .card {
-    @apply flex flex-col gap-3 w-80;
+    @apply flex w-full max-w-80 flex-col gap-3;
   }
 
   .field {

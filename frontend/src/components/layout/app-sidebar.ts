@@ -12,12 +12,14 @@ interface NavItem {
 }
 
 const COLLAPSE_STORAGE_KEY = 'AIXA_SIDEBAR_COLLAPSED'
+export const SIDEBAR_TOGGLE_EVENT = 'aixa-sidebar-toggle'
 
 export class AppSidebar extends LitElement {
   static properties = {
     privileges: { type: Array },
     company: { type: String },
     collapsed: { type: Boolean, state: true },
+    mobileOpen: { type: Boolean, state: true },
     currentPath: { type: String, state: true },
     tooltip: { state: true },
   }
@@ -25,11 +27,21 @@ export class AppSidebar extends LitElement {
   declare privileges: import('../../session/session').Privilege[]
   declare company: string
   declare collapsed: boolean
+  declare mobileOpen: boolean
   declare currentPath: string
   declare tooltip: { label: string; top: number } | null
 
   private onLocationChanged = () => {
     this.currentPath = window.location.pathname
+    this.mobileOpen = false
+  }
+
+  private onToggleEvent = () => {
+    this.mobileOpen = !this.mobileOpen
+  }
+
+  private onWindowKeydown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') this.mobileOpen = false
   }
 
   constructor() {
@@ -37,6 +49,7 @@ export class AppSidebar extends LitElement {
     this.privileges = []
     this.company = ''
     this.collapsed = localStorage.getItem(COLLAPSE_STORAGE_KEY) === '1'
+    this.mobileOpen = false
     this.currentPath = window.location.pathname
     this.tooltip = null
   }
@@ -48,10 +61,14 @@ export class AppSidebar extends LitElement {
   connectedCallback() {
     super.connectedCallback()
     window.addEventListener('vaadin-router-location-changed', this.onLocationChanged)
+    window.addEventListener(SIDEBAR_TOGGLE_EVENT, this.onToggleEvent)
+    window.addEventListener('keydown', this.onWindowKeydown)
   }
 
   disconnectedCallback() {
     window.removeEventListener('vaadin-router-location-changed', this.onLocationChanged)
+    window.removeEventListener(SIDEBAR_TOGGLE_EVENT, this.onToggleEvent)
+    window.removeEventListener('keydown', this.onWindowKeydown)
     super.disconnectedCallback()
   }
 
@@ -61,8 +78,15 @@ export class AppSidebar extends LitElement {
     this.tooltip = null
   }
 
+  // On small screens the sidebar is a full-width overlay regardless of the
+  // desktop icon-rail preference, so labels/tooltips must key off "is this
+  // rendering expanded" rather than the raw `collapsed` setting.
+  private get expanded(): boolean {
+    return !this.collapsed || this.mobileOpen
+  }
+
   private showTooltip(e: MouseEvent, label: string) {
-    if (!this.collapsed) return
+    if (this.expanded) return
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
     this.tooltip = { label, top: rect.top + rect.height / 2 }
   }
@@ -118,7 +142,7 @@ export class AppSidebar extends LitElement {
             ${active
             ? 'bg-blue-50 text-blue-900'
             : 'text-[#0F172A] hover:bg-slate-50 hover:font-semibold'}
-            ${this.collapsed ? 'justify-center px-0 py-2.5' : ''}"
+            ${this.expanded ? '' : 'justify-center px-0 py-2.5'}"
         >
           ${active
             ? html`<span
@@ -131,7 +155,7 @@ export class AppSidebar extends LitElement {
               ? 'text-blue-600'
               : 'text-[#64748B] group-hover/item:text-[#0F172A]'}"
           ></lucide-icon>
-          ${this.collapsed ? nothing : html`<span class="truncate">${item.label}</span>`}
+          ${this.expanded ? html`<span class="truncate">${item.label}</span>` : nothing}
         </a>
       </li>
     `
@@ -139,11 +163,32 @@ export class AppSidebar extends LitElement {
 
   render() {
     return html`
+      ${this.mobileOpen
+        ? html`<div
+            class="fixed inset-0 z-30 bg-black/40 lg:hidden"
+            @click=${() => (this.mobileOpen = false)}
+          ></div>`
+        : nothing}
+
       <aside
-        class="flex shrink-0 flex-col border-r border-slate-100 bg-white transition-[width] duration-150 ease-out"
-        style="width: ${this.collapsed ? '72px' : '260px'}"
+        class="fixed inset-y-0 left-0 z-40 flex w-[260px] shrink-0 flex-col border-r border-slate-100 bg-white transition-all duration-200 ease-out ${this
+          .mobileOpen
+          ? 'translate-x-0'
+          : '-translate-x-full'} lg:static lg:inset-y-auto lg:left-auto lg:z-auto lg:w-[var(--sidebar-w)] lg:translate-x-0"
+        style="--sidebar-w: ${this.collapsed ? '72px' : '260px'}"
       >
-        <div class="px-3 py-4">
+        <div class="flex items-center justify-between px-4 py-4 lg:hidden">
+          <span class="text-sm font-semibold text-[#0F172A]">Menú</span>
+          <button
+            aria-label="Cerrar menú"
+            class="flex h-9 w-9 items-center justify-center rounded-lg text-[#64748B] transition-colors duration-150 ease-out hover:bg-slate-50 hover:text-[#0F172A]"
+            @click=${() => (this.mobileOpen = false)}
+          >
+            <lucide-icon name="x"></lucide-icon>
+          </button>
+        </div>
+
+        <div class="hidden px-3 py-4 lg:block">
           <button
             @click=${this.toggleCollapsed}
             aria-label=${this.collapsed ? 'Expandir menú' : 'Colapsar menú'}
@@ -160,7 +205,7 @@ export class AppSidebar extends LitElement {
           </button>
         </div>
 
-        <nav class="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
+        <nav class="flex flex-col gap-1 overflow-y-auto px-3 py-4">
           <ul class="flex flex-col gap-1">
             ${this.primaryNav.map((item) => this.renderNavItem(item))}
           </ul>
@@ -172,31 +217,31 @@ export class AppSidebar extends LitElement {
           ${this.settingsNav.map((item) => this.renderNavItem(item))}
         </ul>
 
-        <div class="mx-4 border-t border-slate-100"></div>
+        <div class="mt-auto">
+          <div class="mx-4 border-t border-slate-100"></div>
 
-        <div class="mx-4 border-t border-slate-100"></div>
-
-        <div
-          class="relative px-3 py-4"
-          @mouseenter=${(e: MouseEvent) => this.showTooltip(e, this.displayName)}
-          @mouseleave=${() => this.hideTooltip()}
-        >
-          <div class="flex items-center gap-3 rounded-xl px-1 py-1 ${this.collapsed ? 'justify-center' : ''}">
-            <div
-              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-xs font-semibold text-blue-700"
-            >
-              ${this.initials}
+          <div
+            class="relative px-3 py-4"
+            @mouseenter=${(e: MouseEvent) => this.showTooltip(e, this.displayName)}
+            @mouseleave=${() => this.hideTooltip()}
+          >
+            <div class="flex items-center gap-3 rounded-xl px-1 py-1 ${this.expanded ? '' : 'justify-center'}">
+              <div
+                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-xs font-semibold text-blue-700"
+              >
+                ${this.initials}
+              </div>
+              ${this.expanded
+                ? html`
+                    <div class="min-w-0 flex-1">
+                      <p class="truncate text-sm font-medium text-[#0F172A]">${this.displayName}</p>
+                      <p class="truncate text-xs text-[#64748B]">
+                        ${this.company ? html`${this.company} · ${this.userRole}` : this.userRole}
+                      </p>
+                    </div>
+                  `
+                : nothing}
             </div>
-            ${this.collapsed
-              ? nothing
-              : html`
-                  <div class="min-w-0 flex-1">
-                    <p class="truncate text-sm font-medium text-[#0F172A]">${this.displayName}</p>
-                    <p class="truncate text-xs text-[#64748B]">
-                      ${this.company ? html`${this.company} · ${this.userRole}` : this.userRole}
-                    </p>
-                  </div>
-                `}
           </div>
         </div>
       </aside>
