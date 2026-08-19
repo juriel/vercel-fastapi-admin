@@ -1,5 +1,6 @@
 import { LitElement, html } from 'lit'
 import { Router } from '@vaadin/router'
+import { startSessionRefresh } from '../lib/session-refresh'
 import './views/home-view'
 import './views/users-view'
 import './views/profiles-view'
@@ -15,6 +16,8 @@ export class AppRoot extends LitElement {
   }
 
   firstUpdated() {
+    startSessionRefresh()
+
     const router = new Router(this.querySelector('#outlet'))
     router.setRoutes([
       { path: '/', component: 'home-view' },

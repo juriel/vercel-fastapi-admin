@@ -48,6 +48,10 @@ export class Session {
     return this.read()?.identity ?? null
   }
 
+  get expiresAt(): string | null {
+    return this.read()?.expires_at ?? null
+  }
+
   get privileges(): Privilege[] {
     return this.read()?.privileges ?? []
   }
