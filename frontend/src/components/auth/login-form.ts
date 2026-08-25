@@ -73,8 +73,8 @@ export class LoginForm extends LitElement {
   render() {
     return html`
       <form class="card" @submit=${this.submit}>
-        <img src="/aixa-logo.svg" alt="Aixa" class="w-24 mx-auto mb-2" />
-        <h1 class="text-xl font-semibold m-0 mb-2 text-[var(--primary-color2)]">Iniciar sesión</h1>
+        <img src="/evoforma-logo.png" alt="Evoforma" class="w-24 mx-auto mb-2" />
+        <h1 class="text-xl font-heading m-0 mb-2 text-[var(--primary-color2)]">Iniciar sesión</h1>
         <div class="relative">
           <app-icon
             name="user"

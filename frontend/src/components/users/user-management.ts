@@ -316,7 +316,7 @@ export class UserManagement extends LitElement {
           type=${this.showPassword ? 'text' : 'password'}
           placeholder=${opts.placeholder}
           autocomplete=${opts.autocomplete}
-          class="h-11 w-full rounded-xl border border-[#E2E8F0] bg-white pl-4 pr-11 text-sm font-medium text-[#0F172A] outline-none transition-colors duration-150 ease-out placeholder:font-normal placeholder:text-[#94A3B8] focus:border-[#0B3B78] focus:ring-4 focus:ring-[#0B3B78]/10"
+          class="h-11 w-full rounded-xl border border-[var(--border-color)] bg-white pl-4 pr-11 text-sm font-medium text-[var(--text-dark)] outline-none transition-colors duration-150 ease-out placeholder:font-normal placeholder:text-[var(--text-light)] focus:border-[var(--primary-color)] focus:ring-4 focus:ring-[var(--primary-color)]/10"
           .value=${opts.value}
           @input=${(e: Event) => opts.onInput((e.target as HTMLInputElement).value)}
         />
@@ -324,7 +324,7 @@ export class UserManagement extends LitElement {
           type="button"
           tabindex="-1"
           aria-label=${this.showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-          class="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#0F172A]"
+          class="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-light)] hover:text-[var(--text-dark)]"
           @click=${() => (this.showPassword = !this.showPassword)}
         >
           <lucide-icon name=${this.showPassword ? 'eye-off' : 'eye'}></lucide-icon>
@@ -337,7 +337,7 @@ export class UserManagement extends LitElement {
     if (this.allProfiles.length === 0) return nothing
     return html`
       <select
-        class="h-11 w-full rounded-xl border border-[#E2E8F0] bg-white px-4 text-sm font-medium text-[#0F172A] outline-none transition-colors duration-150 ease-out focus:border-[#0B3B78] focus:ring-4 focus:ring-[#0B3B78]/10"
+        class="h-11 w-full rounded-xl border border-[var(--border-color)] bg-white px-4 text-sm font-medium text-[var(--text-dark)] outline-none transition-colors duration-150 ease-out focus:border-[var(--primary-color)] focus:ring-4 focus:ring-[var(--primary-color)]/10"
         .value=${this.formProfileCode}
         @change=${(e: Event) => (this.formProfileCode = (e.target as HTMLSelectElement).value)}
       >
@@ -361,7 +361,7 @@ export class UserManagement extends LitElement {
         type=${opts.type}
         placeholder=${opts.placeholder}
         ?disabled=${opts.disabled}
-        class="h-11 w-full rounded-xl border border-[#E2E8F0] bg-white px-4 text-sm font-medium text-[#0F172A] outline-none transition-colors duration-150 ease-out placeholder:font-normal placeholder:text-[#94A3B8] focus:border-[#0B3B78] focus:ring-4 focus:ring-[#0B3B78]/10 disabled:bg-[#F8FAFC] disabled:text-[#94A3B8]"
+        class="h-11 w-full rounded-xl border border-[var(--border-color)] bg-white px-4 text-sm font-medium text-[var(--text-dark)] outline-none transition-colors duration-150 ease-out placeholder:font-normal placeholder:text-[var(--text-light)] focus:border-[var(--primary-color)] focus:ring-4 focus:ring-[var(--primary-color)]/10 disabled:bg-[var(--bg-hover-light)] disabled:text-[var(--text-light)]"
         .value=${opts.value}
         @input=${(e: Event) => opts.onInput((e.target as HTMLInputElement).value)}
       />
@@ -373,10 +373,10 @@ export class UserManagement extends LitElement {
     return html`
       <div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
         <form
-          class="flex w-full max-w-md flex-col gap-4 rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-lg"
+          class="flex w-full max-w-md flex-col gap-4 rounded-2xl border border-[var(--border-color)] bg-white p-6 shadow-lg"
           @submit=${this.submitForm}
         >
-          <h2 class="text-lg font-semibold text-[#0F172A]">
+          <h2 class="text-lg font-subheading text-[var(--text-dark)]">
             ${isEdit ? 'Editar usuario' : 'Crear usuario'}
           </h2>
 
@@ -412,10 +412,10 @@ export class UserManagement extends LitElement {
               autocomplete: 'new-password',
               onInput: (v) => (this.formPasswordConfirm = v),
             })}
-            <label class="flex items-center gap-2 text-sm font-medium text-[#0F172A]">
+            <label class="flex items-center gap-2 text-sm font-medium text-[var(--text-dark)]">
               <input
                 type="checkbox"
-                class="h-4 w-4 rounded border-[#E2E8F0] text-[#0B3B78] focus:ring-[#0B3B78]"
+                class="h-4 w-4 rounded border-[var(--border-color)] text-[var(--primary-color)] focus:ring-[var(--primary-color)]"
                 .checked=${this.formActive}
                 @change=${(e: Event) => (this.formActive = (e.target as HTMLInputElement).checked)}
               />
@@ -424,7 +424,7 @@ export class UserManagement extends LitElement {
             ${this.allProfiles.length > 0
               ? html`
                   <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-medium text-[#94A3B8]"
+                    <label class="text-xs font-medium text-[var(--text-light)]"
                       >Rol${isEdit ? '' : ' *'}</label
                     >
                     ${this.renderRoleField(isEdit)}
@@ -447,14 +447,14 @@ export class UserManagement extends LitElement {
           <div class="flex justify-end gap-3">
             <button
               type="button"
-              class="flex h-11 items-center rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
+              class="flex h-11 items-center rounded-xl border border-[var(--border-color)] bg-white px-5 text-sm font-semibold text-[var(--text-dark)] transition-colors duration-150 ease-out hover:bg-[var(--bg-accent-light)]"
               @click=${this.closeModal}
             >
               Cancelar
             </button>
             <button
               type="submit"
-              class="flex h-11 items-center rounded-xl bg-[#0B3B78] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90 disabled:cursor-default disabled:opacity-60"
+              class="flex h-11 items-center rounded-xl bg-[var(--primary-color)] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90 disabled:cursor-default disabled:opacity-60"
               ?disabled=${this.submitting}
             >
               ${this.submitting ? 'Guardando...' : 'Guardar'}
@@ -468,15 +468,15 @@ export class UserManagement extends LitElement {
   private renderDeleteModal() {
     return html`
       <div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-        <div class="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-lg">
-          <h2 class="text-lg font-semibold text-[#0F172A]">Eliminar usuario</h2>
-          <p class="text-sm text-[#64748B]">
-            ¿Seguro que quieres eliminar a <strong class="text-[#0F172A]">${this.target?.login}</strong>?
+        <div class="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-[var(--border-color)] bg-white p-6 shadow-lg">
+          <h2 class="text-lg font-subheading text-[var(--text-dark)]">Eliminar usuario</h2>
+          <p class="text-sm text-[var(--text-muted)]">
+            ¿Seguro que quieres eliminar a <strong class="text-[var(--text-dark)]">${this.target?.login}</strong>?
             Esta acción no se puede deshacer.
           </p>
           <div class="flex justify-end gap-3">
             <button
-              class="flex h-11 items-center rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
+              class="flex h-11 items-center rounded-xl border border-[var(--border-color)] bg-white px-5 text-sm font-semibold text-[var(--text-dark)] transition-colors duration-150 ease-out hover:bg-[var(--bg-accent-light)]"
               @click=${this.closeModal}
             >
               Cancelar
@@ -497,25 +497,25 @@ export class UserManagement extends LitElement {
   render() {
     const canWrite = this.canWrite
     return html`
-      <main class="flex-1 min-h-100 bg-[#F8FAFC] p-4 sm:p-8">
+      <main class="flex-1 min-h-100 bg-[var(--bg-hover-light)] p-4 sm:p-8">
         <div class="flex flex-col gap-6">
           <div class="flex flex-wrap items-center justify-between gap-4">
             <div class="relative w-full max-w-[420px]">
               <lucide-icon
                 name="search"
-                class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+                class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-light)]"
               ></lucide-icon>
               <input
                 type="text"
                 placeholder="Buscar por usuario, nombre o email..."
-                class="h-12 w-full rounded-xl border border-[#E2E8F0] bg-white pl-11 pr-4 text-sm font-medium text-[#0F172A] outline-none transition-colors duration-150 ease-out placeholder:font-normal placeholder:text-[#94A3B8] focus:border-[#0B3B78] focus:ring-4 focus:ring-[#0B3B78]/10"
+                class="h-12 w-full rounded-xl border border-[var(--border-color)] bg-white pl-11 pr-4 text-sm font-medium text-[var(--text-dark)] outline-none transition-colors duration-150 ease-out placeholder:font-normal placeholder:text-[var(--text-light)] focus:border-[var(--primary-color)] focus:ring-4 focus:ring-[var(--primary-color)]/10"
                 .value=${this.filter}
                 @input=${this.onFilterInput}
               />
             </div>
             <div class="flex items-center gap-3">
               <button
-                class="flex h-12 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
+                class="flex h-12 items-center gap-2 rounded-xl border border-[var(--border-color)] bg-white px-5 text-sm font-semibold text-[var(--text-dark)] transition-colors duration-150 ease-out hover:bg-[var(--bg-accent-light)]"
                 @click=${this.loadUsers}
               >
                 <lucide-icon name="refresh-cw"></lucide-icon>
@@ -524,7 +524,7 @@ export class UserManagement extends LitElement {
               ${canWrite
                 ? html`
                     <button
-                      class="flex h-12 items-center gap-2 rounded-xl bg-[#0B3B78] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90"
+                      class="flex h-12 items-center gap-2 rounded-xl bg-[var(--primary-color)] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90"
                       @click=${this.openCreate}
                     >
                       <lucide-icon name="user-plus"></lucide-icon>
@@ -540,20 +540,20 @@ export class UserManagement extends LitElement {
             : nothing}
 
           ${this.loading
-            ? html`<p class="text-sm text-[#64748B]">Cargando...</p>`
+            ? html`<p class="text-sm text-[var(--text-muted)]">Cargando...</p>`
             : html`
-                <div class="overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white">
+                <div class="overflow-hidden rounded-2xl border border-[var(--border-color)] bg-white">
                   <div class="overflow-x-auto">
                     <table class="w-full border-collapse text-left text-sm">
                       <thead>
                         <tr>
-                          <th class="px-6 py-4 font-semibold text-[#334155]">Usuario</th>
-                          <th class="px-6 py-4 font-semibold text-[#334155]">Nombre</th>
-                          <th class="px-6 py-4 font-semibold text-[#334155]">Email</th>
-                          <th class="px-6 py-4 font-semibold text-[#334155]">Rol</th>
-                          <th class="px-6 py-4 font-semibold text-[#334155]">Activo</th>
+                          <th class="px-6 py-4 font-semibold text-[var(--text-dark)]">Usuario</th>
+                          <th class="px-6 py-4 font-semibold text-[var(--text-dark)]">Nombre</th>
+                          <th class="px-6 py-4 font-semibold text-[var(--text-dark)]">Email</th>
+                          <th class="px-6 py-4 font-semibold text-[var(--text-dark)]">Rol</th>
+                          <th class="px-6 py-4 font-semibold text-[var(--text-dark)]">Activo</th>
                           ${canWrite
-                            ? html`<th class="px-6 py-4 font-semibold text-[#334155]">Acciones</th>`
+                            ? html`<th class="px-6 py-4 font-semibold text-[var(--text-dark)]">Acciones</th>`
                             : nothing}
                         </tr>
                       </thead>
@@ -561,27 +561,27 @@ export class UserManagement extends LitElement {
                         ${this.users.map(
                           (u) => html`
                             <tr
-                              class="border-t border-[#F1F5F9] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
+                              class="border-t border-[var(--bg-neutral)] transition-colors duration-150 ease-out hover:bg-[var(--bg-accent-light)]"
                             >
                               <td class="h-[60px] px-6">
                                 <div class="flex items-center gap-3">
                                   <div
-                                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EFF6FF] text-xs font-semibold text-[#0B3B78]"
+                                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--bg-accent-light)] text-xs font-semibold text-[var(--primary-color)]"
                                   >
                                     ${initials(u.name || u.login)}
                                   </div>
-                                  <span class="font-medium text-[#0F172A]">${u.login}</span>
+                                  <span class="font-medium text-[var(--text-dark)]">${u.login}</span>
                                 </div>
                               </td>
-                              <td class="h-[60px] px-6 text-[#0F172A]">${u.name || '—'}</td>
-                              <td class="h-[60px] px-6 text-[#64748B]">${u.email || '—'}</td>
+                              <td class="h-[60px] px-6 text-[var(--text-dark)]">${u.name || '—'}</td>
+                              <td class="h-[60px] px-6 text-[var(--text-muted)]">${u.email || '—'}</td>
                               <td class="h-[60px] px-6">
                                 ${u.profiles && u.profiles.length > 0
                                   ? html`<span
-                                      class="inline-flex items-center rounded-full bg-[#EFF6FF] px-2.5 py-1 text-xs font-medium text-[#0B3B78]"
+                                      class="inline-flex items-center rounded-full bg-[var(--bg-accent-light)] px-2.5 py-1 text-xs font-medium text-[var(--primary-color)]"
                                       >${u.profiles.map((p) => p.name).join(', ')}</span
                                     >`
-                                  : html`<span class="text-xs text-[#94A3B8]">Sin rol</span>`}
+                                  : html`<span class="text-xs text-[var(--text-light)]">Sin rol</span>`}
                               </td>
                               <td class="h-[60px] px-6">
                                 ${u.active
@@ -590,7 +590,7 @@ export class UserManagement extends LitElement {
                                       >Activo</span
                                     >`
                                   : html`<span
-                                      class="inline-flex items-center rounded-full bg-[#F1F5F9] px-2.5 py-1 text-xs font-medium text-[#64748B]"
+                                      class="inline-flex items-center rounded-full bg-[var(--bg-neutral)] px-2.5 py-1 text-xs font-medium text-[var(--text-muted)]"
                                       >Inactivo</span
                                     >`}
                               </td>
@@ -600,14 +600,14 @@ export class UserManagement extends LitElement {
                                       <div class="flex items-center gap-1">
                                         <button
                                           aria-label="Editar usuario"
-                                          class="flex h-9 w-9 items-center justify-center rounded-lg text-[#64748B] transition-colors duration-150 ease-out hover:bg-[#EFF6FF] hover:text-[#0B3B78]"
+                                          class="flex h-9 w-9 items-center justify-center rounded-lg text-[var(--text-muted)] transition-colors duration-150 ease-out hover:bg-[var(--bg-accent-light)] hover:text-[var(--primary-color)]"
                                           @click=${() => this.openEdit(u)}
                                         >
                                           <lucide-icon name="pencil"></lucide-icon>
                                         </button>
                                         <button
                                           aria-label="Eliminar usuario"
-                                          class="flex h-9 w-9 items-center justify-center rounded-lg text-[#64748B] transition-colors duration-150 ease-out hover:bg-red-50 hover:text-red-600"
+                                          class="flex h-9 w-9 items-center justify-center rounded-lg text-[var(--text-muted)] transition-colors duration-150 ease-out hover:bg-red-50 hover:text-red-600"
                                           @click=${() => this.openDelete(u)}
                                         >
                                           <lucide-icon name="trash-2"></lucide-icon>
@@ -622,7 +622,7 @@ export class UserManagement extends LitElement {
                         ${this.users.length === 0
                           ? html`<tr>
                               <td
-                                class="px-6 py-12 text-center text-sm text-[#64748B]"
+                                class="px-6 py-12 text-center text-sm text-[var(--text-muted)]"
                                 colspan=${canWrite ? 6 : 5}
                               >
                                 No hay usuarios para mostrar.
@@ -635,27 +635,27 @@ export class UserManagement extends LitElement {
                 </div>
 
                 <div class="flex items-center justify-between">
-                  <span class="text-sm text-[#64748B]"
+                  <span class="text-sm text-[var(--text-muted)]"
                     >${this.total} usuario${this.total === 1 ? '' : 's'} en total</span
                   >
                   <div class="flex items-center gap-3">
                     <button
-                      class="flex h-10 items-center rounded-full border border-[#E2E8F0] bg-white px-4 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-white"
+                      class="flex h-10 items-center rounded-full border border-[var(--border-color)] bg-white px-4 text-sm font-semibold text-[var(--text-dark)] transition-colors duration-150 ease-out hover:bg-[var(--bg-accent-light)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-white"
                       ?disabled=${this.page <= 1}
                       @click=${() => this.goToPage(this.page - 1)}
                     >
                       Anterior
                     </button>
-                    <span class="flex items-center gap-1.5 text-sm text-[#64748B]">
+                    <span class="flex items-center gap-1.5 text-sm text-[var(--text-muted)]">
                       Página
                       <span
-                        class="flex h-7 min-w-7 items-center justify-center rounded-full bg-[#0B3B78] px-2 text-xs font-semibold text-white"
+                        class="flex h-7 min-w-7 items-center justify-center rounded-full bg-[var(--primary-color)] px-2 text-xs font-semibold text-white"
                         >${this.page}</span
                       >
                       de ${this.pageCount}
                     </span>
                     <button
-                      class="flex h-10 items-center rounded-full border border-[#E2E8F0] bg-white px-4 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-white"
+                      class="flex h-10 items-center rounded-full border border-[var(--border-color)] bg-white px-4 text-sm font-semibold text-[var(--text-dark)] transition-colors duration-150 ease-out hover:bg-[var(--bg-accent-light)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-white"
                       ?disabled=${this.page >= this.pageCount}
                       @click=${() => this.goToPage(this.page + 1)}
                     >

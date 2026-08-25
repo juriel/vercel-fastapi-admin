@@ -5,7 +5,7 @@ export interface ToastDetail {
   type: ToastType
 }
 
-export const TOAST_EVENT = 'aixa-toast'
+export const TOAST_EVENT = 'evoforma-toast'
 
 function emit(message: string, type: ToastType) {
   window.dispatchEvent(new CustomEvent<ToastDetail>(TOAST_EVENT, { detail: { message, type } }))

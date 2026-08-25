@@ -216,7 +216,7 @@ export class ProfileManagement extends LitElement {
   private renderSwitch(privilege: Privilege) {
     const checked = this.formPrivilegeCodes.has(privilege.code)
     return html`
-      <label class="flex items-center gap-2 cursor-pointer text-sm py-1 text-[#0F172A]">
+      <label class="flex items-center gap-2 cursor-pointer text-sm py-1 text-[var(--text-dark)]">
         <input
           type="checkbox"
           class="sr-only"
@@ -225,8 +225,8 @@ export class ProfileManagement extends LitElement {
         />
         <span
           class="w-9 h-5 shrink-0 rounded-full relative transition-colors ${checked
-            ? 'bg-[#0B3B78]'
-            : 'bg-[#E2E8F0]'}"
+            ? 'bg-[var(--primary-color)]'
+            : 'bg-[var(--border-color)]'}"
         >
           <span
             class="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${checked
@@ -250,7 +250,7 @@ export class ProfileManagement extends LitElement {
         type="text"
         placeholder=${opts.placeholder}
         ?disabled=${opts.disabled}
-        class="h-11 w-full rounded-xl border border-[#E2E8F0] bg-white px-4 text-sm font-medium text-[#0F172A] outline-none transition-colors duration-150 ease-out placeholder:font-normal placeholder:text-[#94A3B8] focus:border-[#0B3B78] focus:ring-4 focus:ring-[#0B3B78]/10 disabled:bg-[#F8FAFC] disabled:text-[#94A3B8]"
+        class="h-11 w-full rounded-xl border border-[var(--border-color)] bg-white px-4 text-sm font-medium text-[var(--text-dark)] outline-none transition-colors duration-150 ease-out placeholder:font-normal placeholder:text-[var(--text-light)] focus:border-[var(--primary-color)] focus:ring-4 focus:ring-[var(--primary-color)]/10 disabled:bg-[var(--bg-hover-light)] disabled:text-[var(--text-light)]"
         .value=${opts.value}
         @input=${(e: Event) => opts.onInput((e.target as HTMLInputElement).value)}
       />
@@ -262,10 +262,10 @@ export class ProfileManagement extends LitElement {
     return html`
       <div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
         <form
-          class="flex w-full max-w-lg max-h-[85vh] flex-col gap-4 overflow-y-auto rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-lg"
+          class="flex w-full max-w-lg max-h-[85vh] flex-col gap-4 overflow-y-auto rounded-2xl border border-[var(--border-color)] bg-white p-6 shadow-lg"
           @submit=${this.submitForm}
         >
-          <h2 class="text-lg font-semibold text-[#0F172A]">
+          <h2 class="text-lg font-subheading text-[var(--text-dark)]">
             ${isEdit ? 'Editar perfil' : 'Crear perfil'}
           </h2>
 
@@ -284,15 +284,15 @@ export class ProfileManagement extends LitElement {
           </div>
 
           <div>
-            <div class="mb-2 text-sm font-semibold text-[#0F172A]">Privilegios</div>
-            <p class="mb-3 text-xs text-[#64748B]">
+            <div class="mb-2 text-sm font-semibold text-[var(--text-dark)]">Privilegios</div>
+            <p class="mb-3 text-xs text-[var(--text-muted)]">
               Selecciona todos los privilegios que quieras asignar a este perfil.
             </p>
             <div class="flex flex-col gap-3">
               ${this.groupedPrivileges.map(
                 ([category, items]) => html`
                   <div>
-                    <div class="mb-1 text-xs font-semibold uppercase text-[#94A3B8]">${category}</div>
+                    <div class="mb-1 text-xs font-semibold uppercase text-[var(--text-light)]">${category}</div>
                     <div class="grid grid-cols-2 gap-x-4">${items.map((p) => this.renderSwitch(p))}</div>
                   </div>
                 `
@@ -314,14 +314,14 @@ export class ProfileManagement extends LitElement {
           <div class="flex justify-end gap-3">
             <button
               type="button"
-              class="flex h-11 items-center rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
+              class="flex h-11 items-center rounded-xl border border-[var(--border-color)] bg-white px-5 text-sm font-semibold text-[var(--text-dark)] transition-colors duration-150 ease-out hover:bg-[var(--bg-accent-light)]"
               @click=${this.closeModal}
             >
               Cancelar
             </button>
             <button
               type="submit"
-              class="flex h-11 items-center rounded-xl bg-[#0B3B78] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90 disabled:cursor-default disabled:opacity-60"
+              class="flex h-11 items-center rounded-xl bg-[var(--primary-color)] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90 disabled:cursor-default disabled:opacity-60"
               ?disabled=${this.submitting}
             >
               ${this.submitting ? 'Guardando...' : 'Guardar'}
@@ -335,16 +335,16 @@ export class ProfileManagement extends LitElement {
   private renderDeleteModal() {
     return html`
       <div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-        <div class="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-lg">
-          <h2 class="text-lg font-semibold text-[#0F172A]">Eliminar perfil</h2>
-          <p class="text-sm text-[#64748B]">
+        <div class="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-[var(--border-color)] bg-white p-6 shadow-lg">
+          <h2 class="text-lg font-subheading text-[var(--text-dark)]">Eliminar perfil</h2>
+          <p class="text-sm text-[var(--text-muted)]">
             ¿Seguro que quieres eliminar el perfil
-            <strong class="text-[#0F172A]">${this.target?.name}</strong>? Esta acción no se puede
+            <strong class="text-[var(--text-dark)]">${this.target?.name}</strong>? Esta acción no se puede
             deshacer.
           </p>
           <div class="flex justify-end gap-3">
             <button
-              class="flex h-11 items-center rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
+              class="flex h-11 items-center rounded-xl border border-[var(--border-color)] bg-white px-5 text-sm font-semibold text-[var(--text-dark)] transition-colors duration-150 ease-out hover:bg-[var(--bg-accent-light)]"
               @click=${this.closeModal}
             >
               Cancelar
@@ -365,11 +365,11 @@ export class ProfileManagement extends LitElement {
   render() {
     const canWrite = this.canWrite
     return html`
-      <main class="flex-1 min-h-100 bg-[#F8FAFC] p-4 sm:p-8">
+      <main class="flex-1 min-h-100 bg-[var(--bg-hover-light)] p-4 sm:p-8">
         <div class="flex flex-col gap-6">
           <div class="flex flex-wrap items-center justify-end gap-3">
             <button
-              class="flex h-12 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-semibold text-[#0F172A] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
+              class="flex h-12 items-center gap-2 rounded-xl border border-[var(--border-color)] bg-white px-5 text-sm font-semibold text-[var(--text-dark)] transition-colors duration-150 ease-out hover:bg-[var(--bg-accent-light)]"
               @click=${this.loadProfiles}
             >
               <lucide-icon name="refresh-cw"></lucide-icon>
@@ -378,7 +378,7 @@ export class ProfileManagement extends LitElement {
             ${canWrite
               ? html`
                   <button
-                    class="flex h-12 items-center gap-2 rounded-xl bg-[#0B3B78] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90"
+                    class="flex h-12 items-center gap-2 rounded-xl bg-[var(--primary-color)] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90"
                     @click=${this.openCreate}
                   >
                     <lucide-icon name="plus"></lucide-icon>
@@ -391,18 +391,18 @@ export class ProfileManagement extends LitElement {
           ${this.error ? html`<p class="error-text">${this.error}</p>` : nothing}
 
           ${this.loading
-            ? html`<p class="text-sm text-[#64748B]">Cargando...</p>`
+            ? html`<p class="text-sm text-[var(--text-muted)]">Cargando...</p>`
             : html`
-                <div class="overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white">
+                <div class="overflow-hidden rounded-2xl border border-[var(--border-color)] bg-white">
                   <div class="overflow-x-auto">
                     <table class="w-full border-collapse text-left text-sm">
                       <thead>
                         <tr>
-                          <th class="px-6 py-4 font-semibold text-[#334155]">Código</th>
-                          <th class="px-6 py-4 font-semibold text-[#334155]">Nombre</th>
-                          <th class="px-6 py-4 font-semibold text-[#334155]">Privilegios</th>
+                          <th class="px-6 py-4 font-semibold text-[var(--text-dark)]">Código</th>
+                          <th class="px-6 py-4 font-semibold text-[var(--text-dark)]">Nombre</th>
+                          <th class="px-6 py-4 font-semibold text-[var(--text-dark)]">Privilegios</th>
                           ${canWrite
-                            ? html`<th class="px-6 py-4 font-semibold text-[#334155]">Acciones</th>`
+                            ? html`<th class="px-6 py-4 font-semibold text-[var(--text-dark)]">Acciones</th>`
                             : nothing}
                         </tr>
                       </thead>
@@ -410,23 +410,23 @@ export class ProfileManagement extends LitElement {
                         ${this.profiles.map(
                           (p) => html`
                             <tr
-                              class="border-t border-[#F1F5F9] transition-colors duration-150 ease-out hover:bg-[#EFF6FF]"
+                              class="border-t border-[var(--bg-neutral)] transition-colors duration-150 ease-out hover:bg-[var(--bg-accent-light)]"
                             >
                               <td class="h-[60px] px-6">
                                 <span
-                                  class="inline-flex items-center rounded-md bg-[#F1F5F9] px-2 py-1 font-mono text-xs text-[#334155]"
+                                  class="inline-flex items-center rounded-md bg-[var(--bg-neutral)] px-2 py-1 font-mono text-xs text-[var(--text-dark)]"
                                   >${p.code}</span
                                 >
                               </td>
                               <td class="h-[60px] px-6">
                                 <div class="flex flex-col">
-                                  <span class="font-semibold text-[#0F172A]">${p.name}</span>
-                                  <span class="text-xs text-[#64748B]">${describeProfile(p.code)}</span>
+                                  <span class="font-semibold text-[var(--text-dark)]">${p.name}</span>
+                                  <span class="text-xs text-[var(--text-muted)]">${describeProfile(p.code)}</span>
                                 </div>
                               </td>
                               <td class="h-[60px] px-6">
                                 <span
-                                  class="inline-flex items-center rounded-full bg-[#EFF6FF] px-2.5 py-1 text-xs font-medium text-[#0B3B78]"
+                                  class="inline-flex items-center rounded-full bg-[var(--bg-accent-light)] px-2.5 py-1 text-xs font-medium text-[var(--primary-color)]"
                                 >
                                   ${p.privileges.length} privilegio${p.privileges.length === 1 ? '' : 's'}
                                 </span>
@@ -439,21 +439,21 @@ export class ProfileManagement extends LitElement {
                                             <div class="flex items-center gap-1">
                                               <button
                                                 aria-label="Editar perfil"
-                                                class="flex h-9 w-9 items-center justify-center rounded-lg text-[#64748B] transition-colors duration-150 ease-out hover:bg-[#EFF6FF] hover:text-[#0B3B78]"
+                                                class="flex h-9 w-9 items-center justify-center rounded-lg text-[var(--text-muted)] transition-colors duration-150 ease-out hover:bg-[var(--bg-accent-light)] hover:text-[var(--primary-color)]"
                                                 @click=${() => this.openEdit(p)}
                                               >
                                                 <lucide-icon name="pencil"></lucide-icon>
                                               </button>
                                               <button
                                                 aria-label="Eliminar perfil"
-                                                class="flex h-9 w-9 items-center justify-center rounded-lg text-[#64748B] transition-colors duration-150 ease-out hover:bg-red-50 hover:text-red-600"
+                                                class="flex h-9 w-9 items-center justify-center rounded-lg text-[var(--text-muted)] transition-colors duration-150 ease-out hover:bg-red-50 hover:text-red-600"
                                                 @click=${() => this.openDelete(p)}
                                               >
                                                 <lucide-icon name="trash-2"></lucide-icon>
                                               </button>
                                             </div>
                                           `
-                                        : html`<span class="text-xs text-[#94A3B8]">Perfil de sistema</span>`}
+                                        : html`<span class="text-xs text-[var(--text-light)]">Perfil de sistema</span>`}
                                     </td>
                                   `
                                 : nothing}
@@ -463,7 +463,7 @@ export class ProfileManagement extends LitElement {
                         ${this.profiles.length === 0
                           ? html`<tr>
                               <td
-                                class="px-6 py-12 text-center text-sm text-[#64748B]"
+                                class="px-6 py-12 text-center text-sm text-[var(--text-muted)]"
                                 colspan=${canWrite ? 4 : 3}
                               >
                                 No hay perfiles para mostrar.

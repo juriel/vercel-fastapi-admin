@@ -2,47 +2,84 @@
 
 @layer base {
   :root {
-    /* Brand Colors (sourced from aixalab.comtor.net's nue-common-style.css) */
-    --primary-color2: #083461;
-    --secondary-color2: #0b4886;
-    --primary-color: #c20313;
-    --secondary-color: #61080f;
+    /* Brand Colors (client palette) */
+    --brand-orange: #ff7900;
+    --brand-orange-light: #ffbe88;
+    --brand-blue-gray: #7697a0;
+    --brand-teal: #80b7c4;
+    --brand-dark: #57595b;
+    --brand-gray-light: #e5e5e3;
+
+    --primary-color2: var(--brand-orange);
+    --secondary-color2: color-mix(in srgb, var(--brand-orange) 80%, black);
+    --primary-color: var(--brand-orange);
+    --secondary-color: color-mix(in srgb, var(--brand-orange) 80%, black);
 
     /* Neutrals & Backgrounds */
     --bg-page: #ffffff;
-    --bg-main: #f9f9f9;
-    --bg-hover-light: #fafbfc;
-    --bg-neutral: #f5f5f5;
+    --bg-main: color-mix(in srgb, var(--brand-gray-light) 35%, white);
+    --bg-hover-light: color-mix(in srgb, var(--brand-gray-light) 22%, white);
+    --bg-neutral: color-mix(in srgb, var(--brand-gray-light) 50%, white);
+    --bg-accent-light: color-mix(in srgb, var(--brand-orange-light) 30%, white);
 
     /* Grays & Borders */
-    --border-color: #e0e0e0;
-    --border-input: #ccc;
-    --border-card: #ddd;
-    --border-soft: #eee;
+    --border-color: var(--brand-gray-light);
+    --border-input: var(--brand-gray-light);
+    --border-card: var(--brand-gray-light);
+    --border-soft: color-mix(in srgb, var(--brand-gray-light) 55%, white);
     --shadow-light: rgba(0, 0, 0, 0.08);
     --shadow-main: rgba(0, 0, 0, 0.1);
     --shadow-deep: rgba(0, 0, 0, 0.13);
 
     /* Text Colors */
-    --text-main: #000000;
-    --text-dark: #333;
-    --text-muted: #666;
-    --text-light: #888;
-    --text-kpi: #6c757d;
-    --text-kpi-val: #343a40;
+    --text-main: var(--brand-dark);
+    --text-dark: var(--brand-dark);
+    --text-muted: var(--brand-blue-gray);
+    --text-light: color-mix(in srgb, var(--brand-blue-gray) 55%, white);
+    --text-kpi: var(--brand-blue-gray);
+    --text-kpi-val: var(--brand-dark);
 
     /* Accents */
-    --clr-link: #007bff;
-    --clr-accent-blue: #2a7ae2;
-    --clr-bot-msg: #2673b2;
-    --clr-user-msg: #e0e3e8;
+    --clr-link: var(--brand-orange);
+    --clr-accent-blue: var(--brand-teal);
+    --clr-bot-msg: var(--brand-teal);
+    --clr-user-msg: var(--brand-gray-light);
 
     /* Legacy mapping */
-    --background-color: #b2b2b8;
+    --background-color: var(--brand-gray-light);
     --default-color: var(--text-main);
 
-    font-family: 'Montserrat', system-ui, Avenir, Helvetica, Arial, sans-serif;
+    /* Typography */
+    --font-heading: 'Barlow Condensed', system-ui, sans-serif;
+    --font-body: 'Montserrat', system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+    font-family: var(--font-body);
+    font-weight: 300;
     color-scheme: light;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading);
+    font-weight: 900;
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+
+  .font-heading {
+    font-family: var(--font-heading);
+    font-weight: 900;
+  }
+
+  .font-subheading {
+    font-family: var(--font-heading);
+    font-weight: 700;
   }
 
   html,

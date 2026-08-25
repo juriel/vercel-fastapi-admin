@@ -58,14 +58,14 @@ export class AppContent extends LitElement {
   private renderFeatureCard(card: FeatureCard) {
     return html`
       <div
-        class="flex flex-col gap-4 rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition-all duration-150 ease-out hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(15,23,42,0.06)]"
+        class="flex flex-col gap-4 rounded-2xl border border-[var(--border-color)] bg-white p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition-all duration-150 ease-out hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(15,23,42,0.06)]"
       >
-        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EFF6FF] text-[#0B3B78]">
+        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--bg-accent-light)] text-[var(--primary-color)]">
           <lucide-icon name=${card.icon}></lucide-icon>
         </div>
         <div class="flex flex-col gap-1.5">
-          <h3 class="text-base font-semibold text-[#0F172A]">${card.title}</h3>
-          <p class="text-sm leading-relaxed text-[#64748B]">${card.description}</p>
+          <h3 class="text-base font-subheading text-[var(--text-dark)]">${card.title}</h3>
+          <p class="text-sm leading-relaxed text-[var(--text-muted)]">${card.description}</p>
         </div>
       </div>
     `
@@ -74,12 +74,12 @@ export class AppContent extends LitElement {
   render() {
     const name = displayNameFromIdentity(this.identity)
     return html`
-      <main class="flex-1 bg-[#F8FAFC] p-4 sm:p-8">
+      <main class="flex-1 bg-[var(--bg-hover-light)] p-4 sm:p-8">
         <div class="flex flex-col gap-8">
           <div class="flex flex-col gap-1.5">
-            <h1 class="text-2xl font-bold text-[#0F172A]">Buenos días, ${name}</h1>
-            <p class="max-w-2xl text-sm leading-relaxed text-[#64748B]">
-              Bienvenido nuevamente a AIXA. Desde aquí puedes administrar tus asistentes,
+            <h1 class="text-2xl font-heading text-[var(--text-dark)]">Buenos días, ${name}</h1>
+            <p class="max-w-2xl text-sm leading-relaxed text-[var(--text-muted)]">
+              Bienvenido nuevamente a Evoforma. Desde aquí puedes administrar tus asistentes,
               automatizaciones y toda tu organización.
             </p>
           </div>
@@ -88,42 +88,42 @@ export class AppContent extends LitElement {
             ${FEATURE_CARDS.map((card) => this.renderFeatureCard(card))}
           </div>
 
-          <div class="rounded-2xl border border-[#E2E8F0] bg-white p-6">
-            <h2 class="mb-5 text-base font-semibold text-[#0F172A]">Actividad reciente</h2>
+          <div class="rounded-2xl border border-[var(--border-color)] bg-white p-6">
+            <h2 class="mb-5 text-base font-subheading text-[var(--text-dark)]">Actividad reciente</h2>
             <ul class="flex flex-col">
               ${RECENT_ACTIVITY.map(
                 (item, i) => html`
                   <li
                     class="flex items-center gap-3 py-3.5 ${i < RECENT_ACTIVITY.length - 1
-                      ? 'border-b border-[#F1F5F9]'
+                      ? 'border-b border-[var(--bg-neutral)]'
                       : ''}"
                   >
-                    <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#0B3B78]"></span>
-                    <span class="text-sm font-medium text-[#0F172A]">${item.title}</span>
-                    <span class="ml-auto shrink-0 text-xs text-[#64748B]">${item.time}</span>
+                    <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--primary-color)]"></span>
+                    <span class="text-sm font-medium text-[var(--text-dark)]">${item.title}</span>
+                    <span class="ml-auto shrink-0 text-xs text-[var(--text-muted)]">${item.time}</span>
                   </li>
                 `
               )}
             </ul>
           </div>
 
-          <div class="rounded-2xl border border-[#E2E8F0] bg-white p-6">
-            <h2 class="mb-5 text-base font-semibold text-[#0F172A]">Estado del sistema</h2>
+          <div class="rounded-2xl border border-[var(--border-color)] bg-white p-6">
+            <h2 class="mb-5 text-base font-subheading text-[var(--text-dark)]">Estado del sistema</h2>
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
               <div class="flex flex-col gap-1.5">
                 <div class="flex items-center gap-2">
                   <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500"></span>
-                  <span class="text-sm font-semibold text-[#0F172A]">Sistema operativo</span>
+                  <span class="text-sm font-semibold text-[var(--text-dark)]">Sistema operativo</span>
                 </div>
-                <p class="text-xs text-[#64748B]">Todos los servicios funcionando correctamente.</p>
+                <p class="text-xs text-[var(--text-muted)]">Todos los servicios funcionando correctamente.</p>
               </div>
               <div class="flex flex-col gap-1.5">
-                <span class="text-sm font-semibold text-[#0F172A]">Última sincronización</span>
-                <p class="text-xs text-[#64748B]">Hace unos segundos.</p>
+                <span class="text-sm font-semibold text-[var(--text-dark)]">Última sincronización</span>
+                <p class="text-xs text-[var(--text-muted)]">Hace unos segundos.</p>
               </div>
               <div class="flex flex-col gap-1.5">
-                <span class="text-sm font-semibold text-[#0F172A]">Versión</span>
-                <p class="text-xs text-[#64748B]">AIXA Cloud 1.0</p>
+                <span class="text-sm font-semibold text-[var(--text-dark)]">Versión</span>
+                <p class="text-xs text-[var(--text-muted)]">Evoforma Cloud 1.0</p>
               </div>
             </div>
           </div>

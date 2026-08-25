@@ -39,7 +39,7 @@ export class HomeView extends LitElement {
         <app-header
           .identity=${this.identity}
           pageTitle="Inicio"
-          pageSubtitle="Resumen general de tu organización en AIXA."
+          pageSubtitle="Resumen general de tu organización en Evoforma."
         ></app-header>
         <div class="flex flex-1">
           <app-sidebar .privileges=${this.privileges}></app-sidebar>

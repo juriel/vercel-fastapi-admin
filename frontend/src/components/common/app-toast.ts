@@ -79,12 +79,12 @@ export class AppToast extends LitElement {
               <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${badgeBg}">
                 <lucide-icon name=${icon} class="h-6 w-6 ${iconColor}"></lucide-icon>
               </div>
-              <p class="min-w-0 flex-1 text-base font-semibold leading-snug text-[#0F172A]">
+              <p class="min-w-0 flex-1 text-base font-semibold leading-snug text-[var(--text-dark)]">
                 ${item.message}
               </p>
               <button
                 aria-label="Cerrar notificación"
-                class="shrink-0 rounded-lg p-1.5 text-[#94A3B8] transition-colors duration-150 ease-out hover:bg-black/5 hover:text-[#0F172A]"
+                class="shrink-0 rounded-lg p-1.5 text-[var(--text-light)] transition-colors duration-150 ease-out hover:bg-black/5 hover:text-[var(--text-dark)]"
                 @click=${() => this.dismiss(item.id)}
               >
                 <lucide-icon name="x" class="h-5 w-5"></lucide-icon>

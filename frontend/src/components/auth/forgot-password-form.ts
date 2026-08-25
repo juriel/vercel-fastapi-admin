@@ -33,8 +33,8 @@ export class ForgotPasswordForm extends LitElement {
     if (this.submitted) {
       return html`
         <div class="card">
-          <img src="/aixa-logo.svg" alt="Aixa" class="w-24 mx-auto mb-2" />
-          <h1 class="text-xl font-semibold m-0 mb-2 text-[var(--primary-color2)]">
+          <img src="/evoforma-logo.png" alt="Evoforma" class="w-24 mx-auto mb-2" />
+          <h1 class="text-xl font-heading m-0 mb-2 text-[var(--primary-color2)]">
             Solicitud enviada
           </h1>
           <p>
@@ -48,8 +48,8 @@ export class ForgotPasswordForm extends LitElement {
 
     return html`
       <form class="card" @submit=${this.submit}>
-        <img src="/aixa-logo.svg" alt="Aixa" class="w-24 mx-auto mb-2" />
-        <h1 class="text-xl font-semibold m-0 mb-2 text-[var(--primary-color2)]">
+        <img src="/evoforma-logo.png" alt="Evoforma" class="w-24 mx-auto mb-2" />
+        <h1 class="text-xl font-heading m-0 mb-2 text-[var(--primary-color2)]">
           Recuperar contraseña
         </h1>
         <p class="text-sm">

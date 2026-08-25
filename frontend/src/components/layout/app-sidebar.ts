@@ -11,8 +11,8 @@ interface NavItem {
   visible?: boolean
 }
 
-const COLLAPSE_STORAGE_KEY = 'AIXA_SIDEBAR_COLLAPSED'
-export const SIDEBAR_TOGGLE_EVENT = 'aixa-sidebar-toggle'
+const COLLAPSE_STORAGE_KEY = 'EVOFORMA_SIDEBAR_COLLAPSED'
+export const SIDEBAR_TOGGLE_EVENT = 'evoforma-sidebar-toggle'
 
 export class AppSidebar extends LitElement {
   static properties = {
@@ -140,20 +140,20 @@ export class AppSidebar extends LitElement {
           @mouseleave=${() => this.hideTooltip()}
           class="relative flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors duration-150 ease-out
             ${active
-            ? 'bg-blue-50 text-blue-900'
-            : 'text-[#0F172A] hover:bg-slate-50 hover:font-semibold'}
+            ? 'bg-[var(--bg-accent-light)] text-[var(--primary-color)]'
+            : 'text-[var(--text-dark)] hover:bg-[var(--bg-hover-light)] hover:font-semibold'}
             ${this.expanded ? '' : 'justify-center px-0 py-2.5'}"
         >
           ${active
             ? html`<span
-                class="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-[3px] rounded-full bg-blue-600"
+                class="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-[3px] rounded-full bg-[var(--primary-color)]"
               ></span>`
             : nothing}
           <lucide-icon
             name=${item.icon}
             class="shrink-0 transition-colors duration-150 ease-out ${active
-              ? 'text-blue-600'
-              : 'text-[#64748B] group-hover/item:text-[#0F172A]'}"
+              ? 'text-[var(--primary-color)]'
+              : 'text-[var(--text-muted)] group-hover/item:text-[var(--text-dark)]'}"
           ></lucide-icon>
           ${this.expanded ? html`<span class="truncate">${item.label}</span>` : nothing}
         </a>
@@ -171,17 +171,17 @@ export class AppSidebar extends LitElement {
         : nothing}
 
       <aside
-        class="fixed inset-y-0 left-0 z-40 flex w-[260px] shrink-0 flex-col border-r border-slate-100 bg-white transition-all duration-200 ease-out ${this
+        class="fixed inset-y-0 left-0 z-40 flex w-[260px] shrink-0 flex-col border-r border-[var(--border-soft)] bg-white transition-all duration-200 ease-out ${this
           .mobileOpen
           ? 'translate-x-0'
           : '-translate-x-full'} lg:static lg:inset-y-auto lg:left-auto lg:z-auto lg:w-[var(--sidebar-w)] lg:translate-x-0"
         style="--sidebar-w: ${this.collapsed ? '72px' : '260px'}"
       >
         <div class="flex items-center justify-between px-4 py-4 lg:hidden">
-          <span class="text-sm font-semibold text-[#0F172A]">Menú</span>
+          <span class="text-sm font-semibold text-[var(--text-dark)]">Menú</span>
           <button
             aria-label="Cerrar menú"
-            class="flex h-9 w-9 items-center justify-center rounded-lg text-[#64748B] transition-colors duration-150 ease-out hover:bg-slate-50 hover:text-[#0F172A]"
+            class="flex h-9 w-9 items-center justify-center rounded-lg text-[var(--text-muted)] transition-colors duration-150 ease-out hover:bg-[var(--bg-hover-light)] hover:text-[var(--text-dark)]"
             @click=${() => (this.mobileOpen = false)}
           >
             <lucide-icon name="x"></lucide-icon>
@@ -192,7 +192,7 @@ export class AppSidebar extends LitElement {
           <button
             @click=${this.toggleCollapsed}
             aria-label=${this.collapsed ? 'Expandir menú' : 'Colapsar menú'}
-            class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-[#64748B] transition-colors duration-150 ease-out hover:bg-slate-50 hover:text-[#0F172A] ${this
+            class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-[var(--text-muted)] transition-colors duration-150 ease-out hover:bg-[var(--bg-hover-light)] hover:text-[var(--text-dark)] ${this
               .collapsed
               ? 'justify-center px-0'
               : ''}"
@@ -211,14 +211,14 @@ export class AppSidebar extends LitElement {
           </ul>
         </nav>
 
-        <div class="mx-4 border-t border-slate-100"></div>
+        <div class="mx-4 border-t border-[var(--border-soft)]"></div>
 
         <ul class="flex flex-col gap-1 px-3 py-4">
           ${this.settingsNav.map((item) => this.renderNavItem(item))}
         </ul>
 
         <div class="mt-auto">
-          <div class="mx-4 border-t border-slate-100"></div>
+          <div class="mx-4 border-t border-[var(--border-soft)]"></div>
 
           <div
             class="relative px-3 py-4"
@@ -227,15 +227,15 @@ export class AppSidebar extends LitElement {
           >
             <div class="flex items-center gap-3 rounded-xl px-1 py-1 ${this.expanded ? '' : 'justify-center'}">
               <div
-                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-xs font-semibold text-blue-700"
+                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--bg-accent-light)] text-xs font-semibold text-[var(--primary-color)]"
               >
                 ${this.initials}
               </div>
               ${this.expanded
                 ? html`
                     <div class="min-w-0 flex-1">
-                      <p class="truncate text-sm font-medium text-[#0F172A]">${this.displayName}</p>
-                      <p class="truncate text-xs text-[#64748B]">
+                      <p class="truncate text-sm font-medium text-[var(--text-dark)]">${this.displayName}</p>
+                      <p class="truncate text-xs text-[var(--text-muted)]">
                         ${this.company ? html`${this.company} · ${this.userRole}` : this.userRole}
                       </p>
                     </div>
@@ -249,7 +249,7 @@ export class AppSidebar extends LitElement {
       ${this.tooltip
         ? html`
             <span
-              class="pointer-events-none fixed z-50 whitespace-nowrap rounded-lg bg-[#0F172A] px-2.5 py-1.5 text-xs font-medium text-white shadow-sm"
+              class="pointer-events-none fixed z-50 whitespace-nowrap rounded-lg bg-[var(--text-dark)] px-2.5 py-1.5 text-xs font-medium text-white shadow-sm"
               style="left: 80px; top: ${this.tooltip.top}px; transform: translateY(-50%)"
             >
               ${this.tooltip.label}

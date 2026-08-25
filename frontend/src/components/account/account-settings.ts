@@ -121,14 +121,14 @@ export class AccountSettings extends LitElement {
       <div class="relative">
         <lucide-icon
           name="lock"
-          class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+          class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-light)]"
         ></lucide-icon>
         <input
           type=${this.showPassword ? 'text' : 'password'}
           placeholder=${opts.placeholder}
           autocomplete=${opts.autocomplete}
           required
-          class="h-11 w-full rounded-xl border border-[#E2E8F0] bg-white pl-11 pr-11 text-sm font-medium text-[#0F172A] outline-none transition-colors duration-150 ease-out placeholder:font-normal placeholder:text-[#94A3B8] focus:border-[#0B3B78] focus:ring-4 focus:ring-[#0B3B78]/10"
+          class="h-11 w-full rounded-xl border border-[var(--border-color)] bg-white pl-11 pr-11 text-sm font-medium text-[var(--text-dark)] outline-none transition-colors duration-150 ease-out placeholder:font-normal placeholder:text-[var(--text-light)] focus:border-[var(--primary-color)] focus:ring-4 focus:ring-[var(--primary-color)]/10"
           .value=${opts.value}
           @input=${(e: Event) => opts.onInput((e.target as HTMLInputElement).value)}
         />
@@ -136,7 +136,7 @@ export class AccountSettings extends LitElement {
           type="button"
           tabindex="-1"
           aria-label=${this.showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-          class="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#0F172A]"
+          class="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-light)] hover:text-[var(--text-dark)]"
           @click=${() => (this.showPassword = !this.showPassword)}
         >
           <lucide-icon name=${this.showPassword ? 'eye-off' : 'eye'}></lucide-icon>
@@ -148,30 +148,30 @@ export class AccountSettings extends LitElement {
   private renderAccountCard() {
     const name = this.me ? displayNameFromIdentity(this.me.name || this.me.login) : ''
     return html`
-      <div class="flex flex-col gap-6 rounded-2xl border border-[#E2E8F0] bg-white p-6">
-        <h2 class="text-base font-semibold text-[#0F172A]">Información de la cuenta</h2>
+      <div class="flex flex-col gap-6 rounded-2xl border border-[var(--border-color)] bg-white p-6">
+        <h2 class="text-base font-subheading text-[var(--text-dark)]">Información de la cuenta</h2>
         ${this.loading
-          ? html`<p class="text-sm text-[#64748B]">Cargando...</p>`
+          ? html`<p class="text-sm text-[var(--text-muted)]">Cargando...</p>`
           : this.me
             ? html`
                 <div class="flex items-center gap-4">
                   <div
-                    class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#EFF6FF] text-lg font-semibold text-[#0B3B78]"
+                    class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[var(--bg-accent-light)] text-lg font-semibold text-[var(--primary-color)]"
                   >
                     ${initialsFromIdentity(this.me.name || this.me.login)}
                   </div>
                   <div class="flex min-w-0 flex-col">
-                    <span class="truncate text-base font-semibold text-[#0F172A]">${name}</span>
-                    <span class="truncate text-sm text-[#64748B]">@${this.me.login}</span>
+                    <span class="truncate text-base font-semibold text-[var(--text-dark)]">${name}</span>
+                    <span class="truncate text-sm text-[var(--text-muted)]">@${this.me.login}</span>
                   </div>
                 </div>
                 <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div class="flex flex-col gap-1">
-                    <dt class="text-xs font-medium text-[#94A3B8]">Email</dt>
-                    <dd class="text-sm font-medium text-[#0F172A]">${this.me.email || '—'}</dd>
+                    <dt class="text-xs font-medium text-[var(--text-light)]">Email</dt>
+                    <dd class="text-sm font-medium text-[var(--text-dark)]">${this.me.email || '—'}</dd>
                   </div>
                   <div class="flex flex-col gap-1">
-                    <dt class="text-xs font-medium text-[#94A3B8]">Estado</dt>
+                    <dt class="text-xs font-medium text-[var(--text-light)]">Estado</dt>
                     <dd>
                       ${this.me.active
                         ? html`<span
@@ -179,7 +179,7 @@ export class AccountSettings extends LitElement {
                             >Activo</span
                           >`
                         : html`<span
-                            class="inline-flex items-center rounded-full bg-[#F1F5F9] px-2.5 py-1 text-xs font-medium text-[#64748B]"
+                            class="inline-flex items-center rounded-full bg-[var(--bg-neutral)] px-2.5 py-1 text-xs font-medium text-[var(--text-muted)]"
                             >Inactivo</span
                           >`}
                     </dd>
@@ -193,10 +193,10 @@ export class AccountSettings extends LitElement {
 
   private renderPasswordCard() {
     return html`
-      <div class="flex flex-col gap-5 rounded-2xl border border-[#E2E8F0] bg-white p-6">
+      <div class="flex flex-col gap-5 rounded-2xl border border-[var(--border-color)] bg-white p-6">
         <div class="flex flex-col gap-1">
-          <h2 class="text-base font-semibold text-[#0F172A]">Cambiar contraseña</h2>
-          <p class="text-sm text-[#64748B]">
+          <h2 class="text-base font-subheading text-[var(--text-dark)]">Cambiar contraseña</h2>
+          <p class="text-sm text-[var(--text-muted)]">
             Usa una contraseña de al menos ${MIN_PASSWORD_LENGTH} caracteres que no utilices en
             otros sitios.
           </p>
@@ -246,7 +246,7 @@ export class AccountSettings extends LitElement {
           <div class="mt-1 flex justify-end">
             <button
               type="submit"
-              class="flex h-11 items-center rounded-xl bg-[#0B3B78] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90 disabled:cursor-default disabled:opacity-60"
+              class="flex h-11 items-center rounded-xl bg-[var(--primary-color)] px-5 text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90 disabled:cursor-default disabled:opacity-60"
               ?disabled=${this.submitting}
             >
               ${this.submitting ? 'Guardando...' : 'Actualizar contraseña'}
@@ -259,7 +259,7 @@ export class AccountSettings extends LitElement {
 
   render() {
     return html`
-      <main class="flex-1 min-h-100 bg-[#F8FAFC] p-4 sm:p-8">
+      <main class="flex-1 min-h-100 bg-[var(--bg-hover-light)] p-4 sm:p-8">
         <div class="mx-auto flex max-w-3xl flex-col gap-6">
           ${this.renderAccountCard()} ${this.renderPasswordCard()}
         </div>
