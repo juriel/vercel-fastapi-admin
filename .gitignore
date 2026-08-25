@@ -16,9 +16,6 @@ __pycache__/
 venv/
 env/
 
-# DB backups (real data, never commit)
-backend/backups/
-
 # Environment variables (contains secrets)
 .env
 .env.*
