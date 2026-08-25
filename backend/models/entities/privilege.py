@@ -4,7 +4,7 @@ from models.sqlalchemy.common.base import SQLAlchemyBase
 
 
 class Privilege(SQLAlchemyBase):
-    __tablename__ = "privilege"
+    __tablename__ = "evoforma_privilege"
 
     code = Column(String(32), primary_key=True)
     name = Column(String(255), nullable=False)

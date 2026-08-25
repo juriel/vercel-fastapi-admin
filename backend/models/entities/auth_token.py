@@ -4,7 +4,7 @@ from models.sqlalchemy.common.base import SQLAlchemyBase
 
 
 class AuthToken(SQLAlchemyBase):
-    __tablename__ = "auth_token"
+    __tablename__ = "evoforma_auth_token"
 
     code = Column(String(1024), primary_key=True)
     user_login = Column("users", String(64), nullable=True)

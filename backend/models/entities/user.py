@@ -4,7 +4,7 @@ from models.sqlalchemy.common.base import SQLAlchemyBase
 
 
 class User(SQLAlchemyBase):
-    __tablename__ = "users"
+    __tablename__ = "evoforma_users"
 
     login = Column(String(64), primary_key=True)
     password = Column(String(255), nullable=True)
