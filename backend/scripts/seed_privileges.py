@@ -20,6 +20,7 @@ PRIVILEGES = [
     ("users.list", "List users", "users"),
     ("profiles.read", "Read profiles", "profiles"),
     ("profiles.write", "Write profiles", "profiles"),
+    ("reports.view", "View reports", "reports"),
 ]
 
 ADMIN_PROFILE = "admin"

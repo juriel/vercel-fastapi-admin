@@ -107,6 +107,7 @@ export class AppSidebar extends LitElement {
     return [
       { label: 'Inicio', href: '/', icon: 'home' },
       { label: 'Usuarios', href: '/users', icon: 'users', visible: session.can('users.read') },
+      { label: 'Reportes', href: '/reports', icon: 'chart-column', visible: session.can('reports.view') },
     ]
   }
 

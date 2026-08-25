@@ -15,6 +15,7 @@ from routers.privilege_router import router as privilege_router
 from routers.profile_router import router as profile_router
 from routers.profile_write_router import router as profile_write_router
 from routers.registration_router import router as registration_router
+from routers.report_router import router as report_router
 from routers.user_router import router as user_router
 from routers.user_write_router import router as user_write_router
 from routers.session_router import router as session_router
@@ -52,6 +53,9 @@ app.include_router(
     profile_write_router,
     prefix="/api",
     dependencies=[Depends(require_privilege("profiles.write"))],
+)
+app.include_router(
+    report_router, prefix="/api", dependencies=[Depends(require_privilege("reports.view"))]
 )
 app.include_router(session_router, prefix="/api")
 app.include_router(me_router, prefix="/api")
