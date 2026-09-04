@@ -73,7 +73,8 @@ class BiReportService:
         )
         return list(self.session.execute(sql))
 
-    def _totals(self, table: str) -> dict:
+    def _totals(self, table: str, with_cartera: bool = False) -> dict:
+        cartera_expr = ", COALESCE(SUM(saldo_cartera), 0)" if with_cartera else ""
         sql = text(
             f"""
             SELECT
@@ -82,40 +83,36 @@ class BiReportService:
               COALESCE(SUM(valor_facturado), 0),
               COALESCE(SUM(saldo_facturar), 0),
               COUNT(*) FILTER (WHERE estado = 'CANCELADO')
+              {cartera_expr}
             FROM "{table}"
             """
         )
-        proyectos, valor, facturado, saldo, cancelados = self.session.execute(sql).one()
-        return {
+        row = self.session.execute(sql).one()
+        proyectos, valor, facturado, saldo, cancelados = row[:5]
+        result = {
             "proyectos": proyectos,
             "valor": float(valor),
             "facturado": float(facturado),
             "saldo": float(saldo),
             "cancelados": cancelados,
         }
+        if with_cartera:
+            result["saldoCartera"] = float(row[5])
+        return result
 
-    def _facturado_pagado(self, table: str) -> tuple[list[dict], list[dict]]:
-        def build(column: str, good_value: str, labels: dict) -> list[dict]:
-            rows = self._group(table, column)
-            counts: dict[str, int] = defaultdict(int)
-            for value, count in rows:
-                key = (value or "").strip().upper()
-                if key not in ("SI", "NO"):
-                    key = "OTRO"
-                counts[key] += count
-            return [
-                {"label": labels["SI"], "value": counts.get("SI", 0), "colorVar": "--good"},
-                {"label": labels["NO"], "value": counts.get("NO", 0), "colorVar": "--warning"},
-                {"label": labels["OTRO"], "value": counts.get("OTRO", 0), "colorVar": "--series-other"},
-            ]
-
-        facturado = build(
-            "facturado", "SI", {"SI": "Facturado", "NO": "No facturado", "OTRO": "No aplica / sin dato"}
-        )
-        pagado = build(
-            "pagado", "SI", {"SI": "Pagado", "NO": "No pagado", "OTRO": "No aplica / sin dato"}
-        )
-        return facturado, pagado
+    def _facturado_status(self, table: str) -> list[dict]:
+        rows = self._group(table, "facturado")
+        counts: dict[str, int] = defaultdict(int)
+        for value, count in rows:
+            key = (value or "").strip().upper()
+            if key not in ("SI", "NO"):
+                key = "OTRO"
+            counts[key] += count
+        return [
+            {"label": "Facturado", "value": counts.get("SI", 0), "colorVar": "--good"},
+            {"label": "No facturado", "value": counts.get("NO", 0), "colorVar": "--warning"},
+            {"label": "No aplica / sin dato", "value": counts.get("OTRO", 0), "colorVar": "--series-other"},
+        ]
 
     def _linea(self, table: str, top_n: int, rank_by: str = "value") -> list[dict]:
         rows = self._group(table, "linea", "precio_proyecto")
@@ -154,7 +151,7 @@ class BiReportService:
 
     def build_colombia_report(self) -> dict:
         table = "bi_col"
-        totals = self._totals(table)
+        totals = self._totals(table, with_cartera=True)
 
         month_rows = self._group(table, "mes_venta", "precio_proyecto")
         by_month = {m: {"count": 0, "value": 0.0} for m in MONTH_ORDER}
@@ -178,16 +175,13 @@ class BiReportService:
             reverse=True,
         )
 
-        facturado, pagado = self._facturado_pagado(table)
-
         return {
             "kpis": totals,
             "monthly": monthly,
             "linea": self._linea(table, top_n=8),
             "estado": estado,
             "comercial": self._top_comercial(table, order_by="value", limit=6),
-            "facturado": facturado,
-            "pagado": pagado,
+            "facturado": self._facturado_status(table),
         }
 
     def build_latam_report(self) -> dict:
@@ -198,12 +192,11 @@ class BiReportService:
             SELECT
               COUNT(*),
               COUNT(*) FILTER (WHERE estado = 'CANCELADO'),
-              COUNT(*) FILTER (WHERE UPPER(TRIM(facturado)) = 'SI'),
-              COUNT(*) FILTER (WHERE UPPER(TRIM(pagado)) = 'SI')
+              COUNT(*) FILTER (WHERE UPPER(TRIM(facturado)) = 'SI')
             FROM "{table}"
             """
         )
-        proyectos, cancelados, facturado_si, pagado_si = self.session.execute(totals_sql).one()
+        proyectos, cancelados, facturado_si = self.session.execute(totals_sql).one()
 
         pais_rows = self._group(table, "pais", "precio_proyecto")
         pais_facturado_sql = text(
@@ -225,20 +218,16 @@ class BiReportService:
             reverse=True,
         )
 
-        facturado, pagado = self._facturado_pagado(table)
-
         return {
             "kpis": {
                 "proyectos": proyectos,
                 "cancelados": cancelados,
                 "facturadoSi": facturado_si,
-                "pagadoSi": pagado_si,
                 "paises": len(pais_list),
             },
             "pais": [{"label": p["label"], "value": p["count"]} for p in pais_list],
             "paisTable": pais_list,
             "linea": self._linea(table, top_n=7, rank_by="count"),
             "comercial": self._top_comercial(table, order_by="count", limit=6),
-            "facturado": facturado,
-            "pagado": pagado,
+            "facturado": self._facturado_status(table),
         }
