@@ -17,23 +17,28 @@ interface StatusSegment {
 }
 
 interface ColombiaReport {
-  kpis: { proyectos: number; valor: number; facturado: number; saldo: number; cancelados: number }
+  kpis: {
+    proyectos: number
+    valor: number
+    facturado: number
+    saldo: number
+    cancelados: number
+    saldoCartera: number
+  }
   monthly: { label: string; count: number; value: number }[]
   linea: HBarItem[]
   estado: HBarItem[]
   comercial: (HBarItem & { count?: number })[]
   facturado: StatusSegment[]
-  pagado: StatusSegment[]
 }
 
 interface LatamReport {
-  kpis: { proyectos: number; cancelados: number; facturadoSi: number; pagadoSi: number; paises: number }
+  kpis: { proyectos: number; cancelados: number; facturadoSi: number; paises: number }
   pais: HBarItem[]
   paisTable: { label: string; count: number; value: number; facturado: number }[]
   linea: HBarItem[]
   comercial: HBarItem[]
   facturado: StatusSegment[]
-  pagado: StatusSegment[]
 }
 
 interface ComercialReport {
@@ -413,6 +418,7 @@ export class ReportManagement extends LitElement {
       { label: 'Valor total proyectos', value: fmtCOP(col.kpis.valor), accent: true },
       { label: 'Facturado', value: fmtCOP(col.kpis.facturado) },
       { label: 'Saldo por facturar', value: fmtCOP(col.kpis.saldo) },
+      { label: 'Saldo de cartera', value: fmtCOP(col.kpis.saldoCartera) },
       {
         label: 'Cancelados',
         value: fmtInt.format(col.kpis.cancelados),
@@ -473,15 +479,8 @@ export class ReportManagement extends LitElement {
       )
     )
 
-    const grid2 = document.createElement('div')
-    grid2.className = 'rpt-grid-2'
-    root.appendChild(grid2)
-
-    this.makeCard(grid2, 'Estado de facturación', `Sobre ${fmtInt.format(col.kpis.proyectos)} proyectos`, (c) =>
+    this.makeCard(root, 'Estado de facturación', `Sobre ${fmtInt.format(col.kpis.proyectos)} proyectos`, (c) =>
       this.renderStatusBar(c, col.facturado, col.kpis.proyectos)
-    )
-    this.makeCard(grid2, 'Estado de pago', `Sobre ${fmtInt.format(col.kpis.proyectos)} proyectos`, (c) =>
-      this.renderStatusBar(c, col.pagado, col.kpis.proyectos)
     )
   }
 
@@ -496,11 +495,6 @@ export class ReportManagement extends LitElement {
         label: 'Facturados',
         value: fmtInt.format(latam.kpis.facturadoSi),
         sub: fmtPct((latam.kpis.facturadoSi / latam.kpis.proyectos) * 100) + ' del total',
-      },
-      {
-        label: 'Pagados',
-        value: fmtInt.format(latam.kpis.pagadoSi),
-        sub: fmtPct((latam.kpis.pagadoSi / latam.kpis.proyectos) * 100) + ' del total',
       },
       {
         label: 'Cancelados',
@@ -549,15 +543,8 @@ export class ReportManagement extends LitElement {
       this.renderHBars(c, latam.comercial, { valueFmt: (v) => fmtInt.format(v) + ' proy.' })
     )
 
-    const grid2 = document.createElement('div')
-    grid2.className = 'rpt-grid-2'
-    root.appendChild(grid2)
-
-    this.makeCard(grid2, 'Estado de facturación', `Sobre ${fmtInt.format(latam.kpis.proyectos)} proyectos`, (c) =>
+    this.makeCard(root, 'Estado de facturación', `Sobre ${fmtInt.format(latam.kpis.proyectos)} proyectos`, (c) =>
       this.renderStatusBar(c, latam.facturado, latam.kpis.proyectos)
-    )
-    this.makeCard(grid2, 'Estado de pago', `Sobre ${fmtInt.format(latam.kpis.proyectos)} proyectos`, (c) =>
-      this.renderStatusBar(c, latam.pagado, latam.kpis.proyectos)
     )
   }
 
