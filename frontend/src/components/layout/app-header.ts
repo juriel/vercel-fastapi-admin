@@ -221,10 +221,11 @@ export class AppHeader extends LitElement {
                 <!-- <a
                   href="/configuracion"
                   class="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-[var(--text-dark)] transition-colors duration-150 ease-out hover:bg-[var(--bg-hover-light)]"
-                > -->
+                
                   <lucide-icon name="settings" class="text-[var(--text-muted)]"></lucide-icon>
                   Configuración
                 </a>
+                > -->
                 <div class="my-1.5 border-t border-[var(--border-soft)]"></div>
                 <button
                   class="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm font-medium text-[var(--text-dark)] transition-colors duration-150 ease-out hover:bg-red-50 hover:text-red-600"
