@@ -144,17 +144,6 @@
     stroke-width: 2;
   }
 
-  app-sidebar,
-  app-header,
-  app-content,
-  user-management,
-  profile-management,
-  report-management,
-  account-settings,
-  charge-management {
-    font-family: 'Inter', system-ui, sans-serif;
-  }
-
   /* These sit next to app-sidebar in a flex row and need to grow into
      the remaining space themselves (the flex utility class Tailwind
      applies is on the <main> *inside* the custom element, not on the
